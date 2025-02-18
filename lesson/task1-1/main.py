@@ -1,3 +1,5 @@
+"""task1-1."""
+
 # 1. 基本的な変数の宣言
 # 以下の指定された条件に合うような値を変数に代入して宣言してください。
 # また宣言した変数を出力してください。
@@ -5,7 +7,7 @@
 # 整数（int） number: 5
 number: int = 5
 # 文字列（string） text: "test"
-test: str = "test"
+text: str = "test"
 # 論理型（boolean） flag: a
 
 flag: bool = True
@@ -31,7 +33,7 @@ print(num_1 % num_2)
 # 問題2で宣言した2つの変数を足した結果が偶数であれば、論理型の変数にTrueを代入してください。
 flag3 = False
 if total % 2 == 0:
-  flag3 = True
+    flag3 = True
 print(flag3)
 
 # 4. 条件式
@@ -39,6 +41,6 @@ print(flag3)
 # 偶数なら「偶数です」
 # 奇数なら「奇数です」
 if flag3 % 2 == 0:
-  print("偶数です")
-elif flag3 % 2 == 1: # 設問2,3の繋がりでflag3はTrueが代入されている状態のため1になる。
-  print("奇数です")
+    print("偶数です")
+elif flag3 % 2 == 1:  # 設問2,3の繋がりでflag3はTrueが代入されている状態のため1になる。
+    print("奇数です")
