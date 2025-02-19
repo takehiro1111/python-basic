@@ -50,5 +50,5 @@ print("3.条件式と論理型（boolean）", is_even)
 # 奇数なら「奇数です」
 if is_even:
     print("4.条件式", "偶数です")
-elif is_even:
+else:
     print("4.条件式", "奇数です")
