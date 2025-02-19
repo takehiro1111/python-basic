@@ -22,25 +22,33 @@ num_1 = 3
 num_2 = 5
 
 total = num_1 + num_2
-print(total)
-print(num_1 - num_2)
-print(num_1 * num_2)
-print(num_1 / num_2)
-print(num_1 % num_2)
+print("2-1.足す", total)
+
+difference = num_1 - num_2
+print("2-2.引く", difference)
+
+product = num_1 * num_2
+print("2-3.かける", product)
+
+quotient = num_1 / num_2
+print("2-4.割る", quotient)
+
+remainder = num_1 % num_2
+print("2-5.余り", remainder)
 
 # 3. 条件式と論理型（boolean）について
 # 初期値がFalseである論理型の変数を宣言してください。
 # 問題2で宣言した2つの変数を足した結果が偶数であれば、論理型の変数にTrueを代入してください。
-flag3 = False
+is_even = False
 if total % 2 == 0:
-    flag3 = True
-print(flag3)
+    is_even = True
+print("3.条件式と論理型（boolean）", is_even)
 
 # 4. 条件式
 # 設問3のboolean型の変数を利用した条件式を作成し、以下のように出力してください。
 # 偶数なら「偶数です」
 # 奇数なら「奇数です」
-if flag3 % 2 == 0:
-    print("偶数です")
-elif flag3 % 2 == 1:  # 設問2,3の繋がりでflag3はTrueが代入されている状態のため1になる。
-    print("奇数です")
+if is_even:
+    print("4.条件式", "偶数です")
+elif is_even:
+    print("4.条件式", "奇数です")
