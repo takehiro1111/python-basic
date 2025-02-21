@@ -33,6 +33,6 @@ print("Pattern1-------------------------------------------")
 #     print(i)
 
 print("Pattern2-------------------------------------------")
-three_multiple_2 = [i for i in range(18, 26, 3)]
+three_multiple_2 = [i for i in range(10, 26, 3)]
 for i in three_multiple_2:
     print(i)
