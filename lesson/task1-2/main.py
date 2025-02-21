@@ -27,9 +27,10 @@ for i in range(40, 51):
 print("8.for文と条件式の組み合わせ2")
 # 10 ~ 25までの数字の中で3の倍数の数字のみを出力してください
 print("Pattern1-------------------------------------------")
-three_multiple_1 = [i for i in range(18, 26) if i % 3 == 0]
-for i in three_multiple_1:
-    print(i)
+# メモリ効率の観点ではベターな書き方ではない。
+# three_multiple_1 = [i for i in range(10, 26) if i % 3 == 0]
+# for i in three_multiple_1:
+#     print(i)
 
 print("Pattern2-------------------------------------------")
 three_multiple_2 = [i for i in range(18, 26, 3)]
