@@ -17,7 +17,7 @@ print(counter)
 # 1000未満の「3と7の倍数」は何個あるか個数を出力してください
 print("----------11. for文を使用した計算--------------------")
 counter = 0
-for i in range(1, 1000):
+for i in range(1, 999 + 1):
     if i % 3 == 0 and i % 7 == 0:
         counter += 1
 print(counter)
@@ -26,7 +26,7 @@ print(counter)
 # 1000未満の「3と7の倍数」の5番目に大きい数を出力してください
 print("----------12. for文を使用した計算--------------------")
 counter = 0
-for i in reversed(range(1, 1000)):
+for i in reversed(range(1, 999 + 1)):
     if i % 3 == 0 and i % 7 == 0:
         counter += 1
         if counter == 5:
