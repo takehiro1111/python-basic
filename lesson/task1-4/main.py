@@ -35,9 +35,8 @@ for i in range(1, 5 + 1, 2):
 
 # この図形をfor文を使って出力してください。
 print("-------------15.図形の表示------------------")
-
-""" パターン1 """
 shape = str(0)
+print("パターン1------------------")
 
 for i in range(1, 5 + 1, 2):
     asc = shape * i
@@ -47,10 +46,7 @@ for j in reversed(range(1, 3 + 1, 2)):
     desc = shape * j
     print(desc)
 
-print("-------------------------------")
-
-""" パターン2 """
-
+print("パターン2------------------")
 
 def loop(start, stop, width):
     l = []
