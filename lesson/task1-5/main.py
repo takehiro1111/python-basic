@@ -38,6 +38,10 @@ l_reversed = list(reversed(l))
 print(l_reversed)
 
 print("パターン2---------------")
+reversed_list = l[::-1]
+print(reversed_list)
+
+print("パターン3---------------")
 # reverseメソッドだと大元のリストへ影響を与える。
 l.reverse()
 print(l)
@@ -50,6 +54,10 @@ print("18-1----------------")
 l = [1, 2, 3, 4, 5]
 print(list(map(lambda x: x * 2, l)))
 
+# リスト内包表記
+print("リスト内包表記----------------")
+print([i * 2 for i in l])
+
 
 # 2. リスト `[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` から偶数だけを取り出して新しいリストを作成してください。
 print("18-2----------------")
@@ -59,6 +67,10 @@ for i in l:
     if i % 2 == 0:
         new_l.append(i)
 print(new_l)
+
+# リスト内包表記
+print("リスト内包表記----------------")
+print([i for i in l if i % 2 == 0])
 
 # 3. 文字列リスト `['apple', 'banana', 'cherry']` の各要素の長さを表示してください。
 print("18-3----------------")
