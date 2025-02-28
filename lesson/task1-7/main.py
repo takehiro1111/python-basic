@@ -4,8 +4,7 @@ print("24.基本的な関数の定義と呼び出し-------------------------")
 
 # 2つの整数を受け取り、その和を返す関数 `add` を定義してください。
 def add(num1: int, num2: int) -> int:
-    result = num1 + num2
-    return result
+    return num1 + num2
 
 
 # その後、関数を使って `3` と `5` の和を表示してください。
@@ -39,7 +38,7 @@ print("パターン1----------------------------------")
 
 
 def concatenate_strings1(str1: str, str2: str, str3: str) -> str:
-    return " ".join(str(str1) + str(str2) + str(str3))
+    return " ".join(str1 + str2 + str3)
 
 
 result1 = concatenate_strings1("Hello", "world", "!")
@@ -49,7 +48,7 @@ print("パターン2----------------------------------")
 
 
 def concatenate_strings2(str1: str, str2: str, str3: str) -> str:
-    return f"{str(str1)} {str(str2)} {str(str3)}"
+    return f"{str1} {str2} {str3}"
 
 
 result2 = concatenate_strings2("Hello", "world", "!")
