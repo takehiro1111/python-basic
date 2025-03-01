@@ -30,7 +30,7 @@ print(sample_tuple[0])
 print(sample_tuple[-1])
 
 # ### 31. タプルの要素の確認
-print("\n 31.タプルの要素の確認")
+print("\n31.タプルの要素の確認")
 # タプル `(10, 20, 30, 40, 50)` に `30` が含まれているかどうかを確認するコードを書いてください。
 sample_tuple = (10, 20, 30, 40, 50)
 print(30 in sample_tuple)
