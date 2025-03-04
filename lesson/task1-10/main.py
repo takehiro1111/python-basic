@@ -42,8 +42,8 @@ def validate_age(user_age):
     return user_age.isdigit()
 
 
-def success_message(name, age):
-    return f"{name}さん（年齢:{age}）、ご登録ありがとうございます！"
+def success_message(user_name, user_age):
+    return f"{user_name}さん（年齢:{user_age}）、ご登録ありがとうございます！"
 
 
 def loop_process():
