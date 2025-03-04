@@ -33,21 +33,50 @@ print("\n39.標準入力")
 # 2. 名前を入力すると、「〇〇さん、あなたの年齢は何歳ですか？」というメッセージが出力され、ユーザーから年齢の入力を受け付けます。
 # 3. 最後に、「〇〇さん（年齢:〇〇）、ご登録ありがとうございます！」というメッセージを出力して、プログラムを終了します。
 
-while True:
-    try:
-        name = str(input("あなたの名前を教えてください。"))
 
-        # 空白か名前の文字数が10文字より大きければ最初から。
-        if not name or len(name) > 10:
-            continue
+def validate_name(user_name):
+    return 1 <= len(user_name) <= 10
 
-        # 例外処理で数値では無い場合はエラーとみなしてくれる。(から文字の場合もカバー)
-        age = int(input(f"{name}さん、あなたの年齢は何歳ですか？"))
 
-        print(f"{name}さん（年齢:{age}）、ご登録ありがとうございます！")
-        break
-    except ValueError as e:
-        print("年齢は数値で入力してください。")
+def validate_age(user_age):
+    return user_age.isdigit()
+
+
+def success_message(name, age):
+    return f"{name}さん（年齢:{age}）、ご登録ありがとうございます！"
+
+
+def loop_process():
+    name = input("あなたの名前を教えてください。")
+    if validate_name(name):
+        age = input(f"{name}さん、あなたの年齢は何歳ですか？")
+        if validate_age(age):
+            return success_message(name, age)
+        else:
+            return loop_process()
+    else:
+        return loop_process()
+
+
+if __name__ == "__main__":
+    input_process = loop_process()
+    print(input_process)
+
+# while True:
+#     try:
+#         name = str(input("あなたの名前を教えてください。"))
+
+#         # 空白か名前の文字数が10文字より大きければ最初から。
+#         if not name or len(name) > 10:
+#             continue
+
+#         # 例外処理で数値では無い場合はエラーとみなしてくれる。(から文字の場合もカバー)
+#         age = int(input(f"{name}さん、あなたの年齢は何歳ですか？"))
+
+#         print(f"{name}さん（年齢:{age}）、ご登録ありがとうございます！")
+#         break
+#     except ValueError as e:
+#         print("年齢は数値で入力してください。")
 
 # ### バリデーション
 
