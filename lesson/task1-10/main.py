@@ -69,6 +69,9 @@ def main():
     return success_message(name, age)
 
 
+input_user_attr = main()
+print(input_user_attr)
+
 # def main():
 #     name = input("あなたの名前を教えてください。")
 #     if validate_name(name):
@@ -79,10 +82,6 @@ def main():
 #             return main()
 #     else:
 #         return main()
-
-
-input_user_attr = main()
-print(input_user_attr)
 
 # while True:
 #     try:
