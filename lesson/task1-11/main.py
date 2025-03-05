@@ -17,7 +17,7 @@ janken_hands = [rock, scissors, paper]
 
 
 # コンピュータの出し手の設定
-def compute_hand(hands_list):
+def compute_hand(hands_list: list) -> str:
     random_index = random.randint(0, 2)
     compute_user_hand = hands_list[random_index]
 
@@ -25,7 +25,7 @@ def compute_hand(hands_list):
 
 
 # ユーザー側の入力じゃんけんの手を入力
-def input_user_hand(hands_list):
+def input_user_hand(hands_list: list) -> str:
     hand_index = int(
         input("あなたの手を数字で入力してください（グー:1 / チョキ:2 / パー:3）")
     )
@@ -37,7 +37,7 @@ def input_user_hand(hands_list):
 
 
 # 判定部分
-def judge_hands(compute_hand, human_hand):
+def judge_hands(compute_hand: str, human_hand: str) -> str:
     if compute_hand == "グー":
         if human_hand == "チョキ":
             return "あなたの負けです。"
@@ -62,7 +62,7 @@ def judge_hands(compute_hand, human_hand):
 
 
 # メイン処理
-def main():
+def main() -> str:
     compute = compute_hand(janken_hands)
     human = input_user_hand(janken_hands)
     result = judge_hands(compute, human)
