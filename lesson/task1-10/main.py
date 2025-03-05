@@ -51,7 +51,7 @@ def input_name():
     if validate_name(name):
         return name
     else:
-        return get_name()
+        return input_name()
 
 
 def input_age(user_name):
@@ -59,7 +59,7 @@ def input_age(user_name):
     if validate_age(age):
         return age
     else:
-        return get_age(age)
+        return input_age(age)
 
 
 def main():
