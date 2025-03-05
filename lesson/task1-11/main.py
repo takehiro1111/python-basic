@@ -16,55 +16,65 @@ paper = "パー"
 janken_hands = [rock, scissors, paper]
 
 
+# ユーザー側の入力じゃんけんの手を入力
+def input_human_hand(hands_list: list) -> str:
+    hand_index = input(
+        f"あなたの手を数字で入力してください（{rock}:1 / {scissors}:2 / {paper}:3）"
+    )
+
+    try:
+        if hand_index.isdigit():
+            index = int(hand_index) - 1
+            human_hand = hands_list[index]
+            print(f"ユーザー側の手:{human_hand}")
+            return human_hand
+        else:
+            return input_human_hand(hands_list)
+    except IndexError:
+        print("1-3の数字を入力してください。")
+        return input_human_hand(hands_list)
+
+
 # コンピュータの出し手の設定
 def compute_hand(hands_list: list) -> str:
     random_index = random.randint(0, 2)
     compute_user_hand = hands_list[random_index]
+    print(f"コンピューター側の手:{compute_user_hand}")
 
     return compute_user_hand
 
 
-# ユーザー側の入力じゃんけんの手を入力
-def input_user_hand(hands_list: list) -> str:
-    hand_index = int(
-        input("あなたの手を数字で入力してください（グー:1 / チョキ:2 / パー:3）")
-    )
-    human_hand = hands_list[hand_index - 1]
-    if human_hand in hands_list:
-        return human_hand
-    else:
-        return input_user_hand(hands_list)
-
-
 # 判定部分
 def judge_hands(compute_hand: str, human_hand: str) -> str:
-    if compute_hand == "グー":
-        if human_hand == "チョキ":
+    if compute_hand == rock:
+        if human_hand == rock:
+            return "引き分けです。"
+        elif human_hand == scissors:
             return "あなたの負けです。"
-        elif human_hand == "パー":
+        elif human_hand == paper:
             return "あなたの勝ちです。"
-        elif human_hand == "グー":
-            return "引き分けです。"
-    elif compute_hand == "チョキ":
-        if human_hand == "チョキ":
-            return "引き分けです。"
-        elif human_hand == "パー":
-            return "あなたの負けです。"
-        elif human_hand == "グー":
+
+    elif compute_hand == scissors:
+        if human_hand == rock:
             return "あなたの勝ちです。"
-    elif compute_hand == "パー":
-        if human_hand == "チョキ":
-            return "あなたの勝ちです。"
-        elif human_hand == "パー":
+        elif human_hand == scissors:
             return "引き分けです。"
-        elif human_hand == "グー":
+        elif human_hand == paper:
             return "あなたの負けです。"
 
+    elif compute_hand == paper:
+        if human_hand == rock:
+            return "あなたの負けです。"
+        elif human_hand == scissors:
+            return "あなたの勝ちです。"
+        elif human_hand == paper:
+            return "引き分けです。"
 
-# メイン処理
+
+# メイン処理: じゃんけんの結果を出力。
 def main() -> str:
+    human = input_human_hand(janken_hands)
     compute = compute_hand(janken_hands)
-    human = input_user_hand(janken_hands)
     result = judge_hands(compute, human)
 
     return result
