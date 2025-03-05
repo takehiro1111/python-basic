@@ -46,16 +46,39 @@ def success_message(user_name, user_age):
     return f"{user_name}さん（年齢:{user_age}）、ご登録ありがとうございます！"
 
 
-def main():
+def input_name():
     name = input("あなたの名前を教えてください。")
     if validate_name(name):
-        age = input(f"{name}さん、あなたの年齢は何歳ですか？")
-        if validate_age(age):
-            return success_message(name, age)
-        else:
-            return main()
+        return name
     else:
-        return main()
+        return get_name()
+
+
+def input_age(user_name):
+    age = input(f"{user_name}さん、あなたの年齢は何歳ですか？")
+    if validate_age(age):
+        return age
+    else:
+        return get_age(age)
+
+
+def main():
+    name = input_name()
+    age = input_age(name)
+
+    return success_message(name, age)
+
+
+# def main():
+#     name = input("あなたの名前を教えてください。")
+#     if validate_name(name):
+#         age = input(f"{name}さん、あなたの年齢は何歳ですか？")
+#         if validate_age(age):
+#             return success_message(name, age)
+#         else:
+#             return main()
+#     else:
+#         return main()
 
 
 input_user_attr = main()
