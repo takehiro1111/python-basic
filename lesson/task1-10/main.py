@@ -46,21 +46,20 @@ def success_message(user_name, user_age):
     return f"{user_name}さん（年齢:{user_age}）、ご登録ありがとうございます！"
 
 
-def loop_process():
+def main():
     name = input("あなたの名前を教えてください。")
     if validate_name(name):
         age = input(f"{name}さん、あなたの年齢は何歳ですか？")
         if validate_age(age):
             return success_message(name, age)
         else:
-            return loop_process()
+            return main()
     else:
-        return loop_process()
+        return main()
 
 
-if __name__ == "__main__":
-    input_process = loop_process()
-    print(input_process)
+input_user_attr = main()
+print(input_user_attr)
 
 # while True:
 #     try:
