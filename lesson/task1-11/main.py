@@ -24,6 +24,7 @@ def input_human_hand(hands_list: list) -> str:
 
     try:
         if hand_index.isdigit():
+            # ユーザーには1以上の数字を入力させるためにインデックスの帳尻合わせを実施。
             index = int(hand_index) - 1
             human_hand = hands_list[index]
             print(f"ユーザー側の手:{human_hand}")
