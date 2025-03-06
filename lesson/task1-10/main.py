@@ -43,7 +43,8 @@ def validate_age(user_age):
 
 
 def success_message(user_name, user_age):
-    return f"{user_name}さん（年齢:{user_age}）、ご登録ありがとうございます！"
+    print(f"{user_name}さん（年齢:{user_age}）、ご登録ありがとうございます！")
+    return True
 
 
 def input_name():
@@ -69,8 +70,8 @@ def main():
     return success_message(name, age)
 
 
-input_user_attr = main()
-print(input_user_attr)
+if __name__ == "__main__":
+    main()
 
 
 # ### バリデーション
