@@ -47,10 +47,27 @@ def success_message(user_name, user_age):
     return True
 
 
-def validate_input(prompt, validate_func):
-    value = input(prompt)
+def input_name():
+    name = input("あなたの名前を教えてください。")
+    if not validate_name(name):
+        return input_name()
+
+    return name
+
+
+def input_age(user_name):
+    age = input(f"{user_name}さん、あなたの年齢は何歳ですか？")
+    if not validate_age(age):
+        return input_age(age)
+
+    return age
+
+
+def validate_input(message, validate_func):
+    value = input(message)
     if not validate_func(value):
-        return validate_input(prompt, validate_func)
+        return validate_input(message, validate_func)
+
     return value
 
 
