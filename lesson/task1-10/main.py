@@ -34,11 +34,12 @@ print("\n39.標準入力")
 # 3. 最後に、「〇〇さん（年齢:〇〇）、ご登録ありがとうございます！」というメッセージを出力して、プログラムを終了します。
 
 
-def validate(info):
-    if type(info) == int:
-        return  True
-    elif type(info) == str:
-        return 1 <= len(info) <= 10
+def validate_name(user_name):
+    return 1 <= len(user_name) <= 10
+
+
+def validate_age(user_age):
+    return user_age.isdigit()
 
 
 def success_message(user_name, user_age):
@@ -47,17 +48,17 @@ def success_message(user_name, user_age):
 
 def input_name():
     name = input("あなたの名前を教えてください。")
-    if not validate(name):
+    if not validate_name(name):
         return input_name()
-    
+
     return name
 
 
 def input_age(user_name):
-    age = int(input(f"{user_name}さん、あなたの年齢は何歳ですか？"))
-    if not  validate(age):
+    age = input(f"{user_name}さん、あなたの年齢は何歳ですか？")
+    if not validate_age(age):
         return input_age(age)
-    
+
     return age
 
 
@@ -71,32 +72,6 @@ def main():
 input_user_attr = main()
 print(input_user_attr)
 
-# def main():
-#     name = input("あなたの名前を教えてください。")
-#     if validate_name(name):
-#         age = input(f"{name}さん、あなたの年齢は何歳ですか？")
-#         if validate_age(age):
-#             return success_message(name, age)
-#         else:
-#             return main()
-#     else:
-#         return main()
-
-# while True:
-#     try:
-#         name = str(input("あなたの名前を教えてください。"))
-
-#         # 空白か名前の文字数が10文字より大きければ最初から。
-#         if not name or len(name) > 10:
-#             continue
-
-#         # 例外処理で数値では無い場合はエラーとみなしてくれる。(から文字の場合もカバー)
-#         age = int(input(f"{name}さん、あなたの年齢は何歳ですか？"))
-
-#         print(f"{name}さん（年齢:{age}）、ご登録ありがとうございます！")
-#         break
-#     except ValueError as e:
-#         print("年齢は数値で入力してください。")
 
 # ### バリデーション
 
