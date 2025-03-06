@@ -10,20 +10,37 @@
 import random
 
 # じゃんけんの手札の設定
-rock = "グー"
-scissors = "チョキ"
-paper = "パー"
-janken_hands = [rock, scissors, paper]
+
+ROCK = "グー"
+SCISSORS = "チョキ"
+PAPER = "パー"
+janken_hands = [ROCK, SCISSORS, PAPER]
+
+
+INPUT_ROCK = 1
+INPUT_SCISSORS = 2
+INPUT_PAPER = 3
+
+WIN = "win"
+LOSE = "lose"
+DRAW = "draw"
+
+YES = "yes"
+NO = "no"
+
+
+def validate_hand(input_hand: str) -> bool:
+    return input_hand.isdigit()
 
 
 # ユーザー側の入力じゃんけんの手を入力
 def input_human_hand(hands_list: list) -> str:
     hand_index = input(
-        f"あなたの手を数字で入力してください（{rock}:1 / {scissors}:2 / {paper}:3）"
+        f"あなたの手を数字で入力してください（{ROCK}:{str(INPUT_SCISSORS)} / {SCISSORS}:{str(INPUT_SCISSORS)} / {PAPER}:{str(INPUT_PAPER)}）"
     )
 
     try:
-        if hand_index.isdigit():
+        if validate_hand(hand_index):
             # ユーザーには1以上の数字を入力させるためにインデックスの帳尻合わせを実施。
             index = int(hand_index) - 1
             human_hand = hands_list[index]
@@ -47,40 +64,76 @@ def compute_hand(hands_list: list) -> str:
 
 # 判定部分
 def judge_hands(compute_hand: str, human_hand: str) -> str:
-    if compute_hand == rock:
-        if human_hand == rock:
-            return "引き分けです。"
-        elif human_hand == scissors:
-            return "あなたの負けです。"
-        elif human_hand == paper:
-            return "あなたの勝ちです。"
+    if compute_hand == ROCK:
+        if human_hand == ROCK:
+            return DRAW
+        elif human_hand == SCISSORS:
+            return LOSE
+        elif human_hand == PAPER:
+            return WIN
 
-    elif compute_hand == scissors:
-        if human_hand == rock:
-            return "あなたの勝ちです。"
-        elif human_hand == scissors:
-            return "引き分けです。"
-        elif human_hand == paper:
-            return "あなたの負けです。"
+    elif compute_hand == SCISSORS:
+        if human_hand == ROCK:
+            return WIN
+        elif human_hand == SCISSORS:
+            return DRAW
+        elif human_hand == PAPER:
+            return LOSE
 
-    elif compute_hand == paper:
-        if human_hand == rock:
-            return "あなたの負けです。"
-        elif human_hand == scissors:
-            return "あなたの勝ちです。"
-        elif human_hand == paper:
-            return "引き分けです。"
+    elif compute_hand == PAPER:
+        if human_hand == ROCK:
+            return LOSE
+        elif human_hand == SCISSORS:
+            return WIN
+        elif human_hand == PAPER:
+            return DRAW
+
+
+def result_output(judge_result: str) -> str:
+    if judge_result == WIN:
+        return "あなたの勝ちです。"
+    elif judge_result == LOSE:
+        return "あなたの負けです。"
+    elif judge_result == DRAW:
+        return "引き分けです。"
+
+
+def display_result(game_result: str) -> str:
+    print(game_result)
+
+
+def again_question(yes, no) -> str:
+    again = input(f"再度じゃんけんしますか？({yes}/{no}) ")
+    return again.lower()
+
+
+def again_judge(again, yes, no):
+    if again == yes:
+        return main
+    elif again == no:
+        return "じゃんけん終了です。"
+
+
+def display_finish(finish: str) -> str:
+    print(finish)
 
 
 # メイン処理: じゃんけんの結果を出力。
 def main() -> str:
     human = input_human_hand(janken_hands)
     compute = compute_hand(janken_hands)
-    result = judge_hands(compute, human)
+    judge_result = judge_hands(compute, human)
+    result = result_output(judge_result)
+    display_result(result)
+    again = again_question(YES, NO)
 
-    return result
+    again_or_finish = again_judge(again, YES, NO)
+
+    if again_or_finish == main:
+        return main()
+    else:
+        return display_finish(again_or_finish)
 
 
 if __name__ == "__main__":
-    janken = main()
-    print(janken)
+    main()
