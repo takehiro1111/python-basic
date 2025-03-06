@@ -88,7 +88,7 @@ def judge_hands(compute_hand: str, human_hand: str) -> str:
         elif human_hand == PAPER:
             return DRAW
 
-
+# 結果出力
 def result_output(judge_result: str) -> str:
     if judge_result == WIN:
         return "あなたの勝ちです。"
@@ -97,24 +97,24 @@ def result_output(judge_result: str) -> str:
     elif judge_result == DRAW:
         return "引き分けです。"
 
-
-def display_result(game_result: str) -> str:
+# 結果表示
+def display_result(game_result: str) -> None:
     print(game_result)
 
-
+# 再戦の確認
 def again_question(yes, no) -> str:
     again = input(f"再度じゃんけんしますか？({yes}/{no}) ")
     return again.lower()
 
-
+# 再戦するかの分岐
 def again_judge(again, yes, no):
     if again == yes:
         return main
     elif again == no:
         return "じゃんけん終了です。"
 
-
-def display_finish(finish: str) -> str:
+# 再戦しない場合の終了出力
+def display_finish(finish: str) -> None:
     print(finish)
 
 
