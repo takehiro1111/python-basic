@@ -34,12 +34,11 @@ print("\n39.標準入力")
 # 3. 最後に、「〇〇さん（年齢:〇〇）、ご登録ありがとうございます！」というメッセージを出力して、プログラムを終了します。
 
 
-def validate_name(user_name):
-    return 1 <= len(user_name) <= 10
-
-
-def validate_age(user_age):
-    return user_age.isdigit()
+def validate(info):
+    if type(info) == int:
+        return  True
+    elif type(info) == str:
+        return 1 <= len(info) <= 10
 
 
 def success_message(user_name, user_age):
@@ -48,18 +47,18 @@ def success_message(user_name, user_age):
 
 def input_name():
     name = input("あなたの名前を教えてください。")
-    if validate_name(name):
-        return name
-    else:
+    if not validate(name):
         return input_name()
+    
+    return name
 
 
 def input_age(user_name):
-    age = input(f"{user_name}さん、あなたの年齢は何歳ですか？")
-    if validate_age(age):
-        return age
-    else:
+    age = int(input(f"{user_name}さん、あなたの年齢は何歳ですか？"))
+    if not  validate(age):
         return input_age(age)
+    
+    return age
 
 
 def main():
