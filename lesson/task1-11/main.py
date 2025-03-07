@@ -171,7 +171,10 @@ def again_question(yes: str, no: str) -> str:
         str: ユーザーの回答（小文字に変換）
     """
     again = input(f"再度じゃんけんしますか？({yes}/{no}) ")
-    return again.lower()
+    if again.lower() == yes or again.lower() == no:
+        return again.lower()
+    else:
+        return again_question(YES, NO)
 
 
 # 再戦するかの分岐
