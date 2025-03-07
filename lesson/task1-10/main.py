@@ -42,7 +42,7 @@ def validate_age(user_age):
     return user_age.isdigit()
 
 
-def success_message(user_name, user_age):
+def notify_success_message(user_name, user_age):
     print(f"{user_name}さん（年齢:{user_age}）、ご登録ありがとうございます！")
     return True
 
@@ -63,19 +63,19 @@ def input_age(user_name):
     return age
 
 
-def validate_input(message, validate_func):
+def input_process(message, validate_func):
     value = input(message)
     if not validate_func(value):
-        return validate_input(message, validate_func)
+        return input_process(message, validate_func)
 
     return value
 
 
 def main():
-    name = validate_input("あなたの名前を教えてください。", validate_name)
-    age = validate_input(f"{name}さん、あなたの年齢は何歳ですか？", validate_age)
+    name = input_process("あなたの名前を教えてください。", validate_name)
+    age = input_process(f"{name}さん、あなたの年齢は何歳ですか？", validate_age)
 
-    return success_message(name, age)
+    return notify_success_message(name, age)
 
 
 if __name__ == "__main__":
