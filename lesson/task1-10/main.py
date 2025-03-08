@@ -44,7 +44,6 @@ def validate_age(user_age):
 
 def notify_success_message(user_name, user_age):
     print(f"{user_name}さん（年齢:{user_age}）、ご登録ありがとうございます！")
-    return True
 
 
 def input_name():
