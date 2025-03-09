@@ -9,7 +9,7 @@ print("\n45.キーの存在確認")
 
 # キー `"city"` が辞書に存在するか確認し、その結果を出力してください。
 person = {"name": "Eve", "age": 22}
-print("age" in person)
+print("city" in person)
 
 # ---
 
