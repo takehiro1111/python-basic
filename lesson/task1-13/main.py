@@ -9,7 +9,7 @@ print("\n45.キーの存在確認")
 
 # キー `"city"` が辞書に存在するか確認し、その結果を出力してください。
 person = {"name": "Eve", "age": 22}
-print("city" in person.keys())
+print("age" in person)
 
 # ---
 
@@ -50,8 +50,9 @@ merge_dict = dict1 | dict2
 print(merge_dict)
 
 print("パターン2---------------------")
-dict1.update(dict2)
-print(dict1)
+dict1_copy = dict1.copy()
+dict1_copy.update(dict2)
+print(dict1_copy)
 
 
 # ---
