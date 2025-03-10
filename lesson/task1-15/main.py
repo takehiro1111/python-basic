@@ -10,12 +10,11 @@ print("\n53. シャローコピーとディープコピー")
 original = {"a": {"nested": 1}, "b": 2}
 
 # ```
-import copy
-
 print(f"コピー元:{original}\n")
 
 # ディープコピー
 ## コピーした後にコピー元を変更しても既にコピーしているため影響ない。独立しているイメージ。
+import copy
 deep_original = copy.deepcopy(original)
 original["a"] = {"nested": 5}
 print(f"deep_copy:{deep_original}")
