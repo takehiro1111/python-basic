@@ -43,7 +43,9 @@ print("\n51.デフォルト値の取得")
 person = {"name": "Lily", "age": 30}
 
 # ```
-country = person.setdefault("country", "Unknown")
+# setdefault() はキーが存在しない場合に元の辞書を変更してしまう
+# country = person.setdefault("country", "Unknown")
+country = person.get("country", "Unknown")
 print(country)
 
 # ---
@@ -62,7 +64,8 @@ data = {
 
 # ```
 print("パターン1----------------------------")
-name = data.get("user2").get("name")
+user_id = data.get("user2")
+name = user_id.get("name") if user_id else "Unknown"
 print(name)
 
 print("パターン2----------------------------")
