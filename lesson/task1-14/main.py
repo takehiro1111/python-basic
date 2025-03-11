@@ -64,8 +64,9 @@ data = {
 
 # ```
 print("パターン1----------------------------")
-user_id = data.get("user2")
-name = user_id.get("name") if user_id else "Unknown"
+# user_id = data.get("user2")
+# name = user_id.get("name") if user_id else "Unknown"
+name = data.get("user2", {}).get("name", "Unknown")
 print(name)
 
 print("パターン2----------------------------")
