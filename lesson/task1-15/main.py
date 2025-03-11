@@ -15,9 +15,11 @@ print(f"コピー元:{original}\n")
 # ディープコピー
 ## コピーした後にコピー元を変更しても既にコピーしているため影響ない。独立しているイメージ。
 import copy
+
 deep_original = copy.deepcopy(original)
-original["a"] = {"nested": 5}
-print(f"deep_copy:{deep_original}")
+original["a"]["nested"] = 100
+print("Original:", original)
+print("Deep Copy:", deep_original)
 
 
 # ```python
@@ -28,8 +30,9 @@ original = {"a": {"nested": 1}, "b": 2}
 
 # シャローコピー
 ## コピーした後にコピー元を変更するとコピー先にも変更が適用される。連動して依存しているイメージ。
-shallow_original = original.copy()
-original["a"] = {"nested": 5}
+shallow_original = copy.copy(original)
+original["a"]["nested"] = 80
+print("\nOriginal:", original)
 print(f"shallow_copy:{original}")
 
 # ---
@@ -44,7 +47,7 @@ scores = {"Charlie": 85, "Alice": 92, "Bob": 78}
 
 # ```
 sorted_dict = sorted(scores.items())
-print(sorted_dict)
+print(dict(sorted_dict))
 
 
 # ---
@@ -60,7 +63,7 @@ scores = {"Charlie": 85, "Alice": 92, "Bob": 78}
 # ```
 # lambdaのxにscoresの要素がtupleとして入るので("Charlie": 85) このtupleをx[1]で戻り値として参照している。
 sorted_dict = sorted(scores.items(), key=lambda x: x[1])
-print(sorted_dict)
+print(dict(sorted_dict))
 
 # ---
 
