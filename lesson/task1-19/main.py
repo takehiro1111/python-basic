@@ -14,7 +14,7 @@ class Car(Engine):
     def __init__(self, horsepower: int) -> None:
         self.engine = Engine(horsepower)
 
-    def get_engine_power(self):
+    def get_engine_power(self) -> int:
         return self.engine.horsepower
 
 
@@ -51,36 +51,78 @@ print(Student.student_count)
 # `BankAccount`クラスを作成し、`balance`（残高）をプライベートな属性として持たせてください。
 # また、`deposit`（預入）と`withdraw`（引出）のメソッドを作成し、プロパティ`balance`を介して残高を取得できるようにしてください。
 class BankAccount:
-    def __init__(self, balance):
+    def __init__(self, balance: int) -> None:
         self.__balance = balance
 
     @property
-    def balance(self):
+    def balance(self) -> int:
+        """
+        Returns:
+            int: 預金残高
+        """
+
         return self.__balance
 
-    def deposit(self, amount):
+    def deposit(self, amount: int) -> bool:
+        """_summary_
+
+        Args:
+            amount (int): 金額
+
+        Returns:
+            bool: 入金が成功したかどうか
+        """
         if amount > 0:
             self.__balance += amount
+            print(f"{amount}円を入金しました。")
             return True
-        return False
+        else:
+            print(f"無効な金額のため入金できませんでした。")
+            return False
 
-    def withdraw(self, amount):
+    def withdraw(self, amount: int) -> bool:
         if 0 < amount <= self.__balance:
             self.__balance -= amount
+            print(f"{amount}円を出金しました。")
             return True
-        return False
+        else:
+            print(f"無効な金額のため出金できませんでした。")
+            return False
 
 
-bank_account = BankAccount(30)
-print(f"Current balance: {bank_account.balance}")
+bank_account = BankAccount(100)
+bank_account.deposit(30)
+print(f"deposit:{bank_account.balance}")
 
-bank_account.deposit(500)
-print(f"After deposit: {bank_account.balance}")
+bank_account.withdraw(10)
+print(f"withdraw:{bank_account.balance}")
 
-bank_account.withdraw(200)
-print(f"After withdrawal: {bank_account.balance}")
 
 # ### 68. 演算子のオーバーロード
-
 # `Vector`というクラスを作成し、2つの属性`x`と`y`を持たせてください。このクラスで`+`演算子をオーバーロードして、
 # 2つの`Vector`オブジェクトを足し合わせて新しい`Vector`を返すようにしてください。
+
+
+class Vector:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __add__(self, other):
+        return Vector(self.x + other.x, self.y + other.y)
+
+    def __str__(self):
+        return f"Vector:{self.x}, {self.y}"
+
+
+vector = Vector(1, 2)
+print(vector)
+
+vector2 = Vector(3, 4)
+print(vector2)
+
+vector3 = Vector(10, 11)
+print(vector3)
+
+vector4 = vector + vector2 + vector3
+print(vector4)
