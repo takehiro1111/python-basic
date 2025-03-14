@@ -74,7 +74,7 @@ class BankAccount:
         """_summary_
 
         Args:
-            amount (int): 金額
+            amount (int):入金額
 
         Returns:
             bool: 入金が成功したかどうか
@@ -88,6 +88,14 @@ class BankAccount:
             return False
 
     def withdraw(self, amount: int) -> bool:
+        """_summary_
+
+        Args:
+            amount (int):出金額
+
+        Returns:
+            bool: 出金が成功したかどうか
+        """
         if 0 < amount <= self.__balance:
             self.__balance -= amount
             print(f"{amount}円を出金しました。")
