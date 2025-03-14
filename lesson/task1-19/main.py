@@ -11,7 +11,7 @@ class Engine:
 
 # 次に`Car`クラスを作成し、`Engine`クラスのインスタンスを`engine`属性として持たせてください。
 # `Car`クラスの`get_engine_power`というメソッドで`horsepower`を返すようにしてください。
-class Car(Engine):
+class Car:
     def __init__(self, horsepower: int) -> None:
         self.engine = Engine(horsepower)
 
@@ -37,18 +37,19 @@ class Student:
     def __init__(self, name, score):
         self.name = name
         self.score = score
-        Student.student_count += 1
 
-    def count(self):
-        return Student.student_count
+    @classmethod
+    def get_student_count(cls):
+        cls.student_count += 1
+        return cls.student_count
 
 
 # クラスインスタンス
 student = Student("takehiro1111", 80)
-print(Student.student_count)
+print(student.get_student_count())
 
 student2 = Student("sato", 100)
-print(Student.student_count)
+print(student.get_student_count())
 
 
 # ### 67. プロパティの使用
