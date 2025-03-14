@@ -37,10 +37,10 @@ class Student:
     def __init__(self, name, score):
         self.name = name
         self.score = score
+        self.__class__.student_count += 1
 
     @classmethod
     def get_student_count(cls):
-        cls.student_count += 1
         return cls.student_count
 
 
