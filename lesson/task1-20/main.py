@@ -12,7 +12,7 @@ class Employee:
     def diplay_employee_info(self):
         print(f"名前:{self.name}\n給与:{self.salary}")
 
-    # ファクトリーメソッド
+    # ファクトリーメソッド:オブジェクト(インスタンス)に意味を与える関数
     @classmethod
     def create_employee(cls, name, salary):
         return cls(name, salary)
