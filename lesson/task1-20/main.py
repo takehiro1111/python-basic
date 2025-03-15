@@ -8,8 +8,8 @@ class Employee:
     def __init__(self, name, salary):
         self.name = name
         self.salary = salary
-        
-    def diplay_employee_info(self):
+
+    def display_employee_info(self):
         print(f"名前:{self.name}\n給与:{self.salary}")
 
     # ファクトリーメソッド:オブジェクト(インスタンス)に意味を与える関数
@@ -25,8 +25,8 @@ employee2 = Employee.create_employee("tanaka", 5000)
 print(type(employee1))
 print(type(employee2))
 
-employee1.diplay_employee_info()
-employee2.diplay_employee_info()
+employee1.display_employee_info()
+employee2.display_employee_info()
 
 
 # ### 70. スタティックメソッドの使用
