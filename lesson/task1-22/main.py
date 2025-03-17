@@ -98,11 +98,9 @@ class LoggableMixin:
         return f"ログ出力: {message}"
 
 
-class User(LoggableMixin):  # LoggableMixinを継承
+class User(LoggableMixin):
     def __init__(self, name):
         self.name = name
-
-
-# 使用例
+        
 user = User("test_message")
 print(user.log("継承したUserクラスのログ"))
