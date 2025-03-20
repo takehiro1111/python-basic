@@ -10,17 +10,19 @@
 
 from dataclasses import dataclass
 
+from setting import ERROR_MESSAGE
+
 
 @dataclass
 class BankAccount:
     """銀行口座
-    銀行口座に必要な機能
+    残高のデータを保持する。
 
     Attributes:
-        __balance(int): 残高
+        _balance(int): 残高
     """
 
-    __balance: int
+    _balance: int
 
     @property
     def balance(self) -> int:
@@ -29,10 +31,59 @@ class BankAccount:
         Returns:
             int: 残高
         """
-        return self.__balance
+        return self._balance
 
-    @staticmethod
-    def validate_amount(amount: int) -> bool:
+
+@dataclass
+class ATM(BankAccount):
+    """ATM
+    預金、引き出しの機能を持つ。
+    """
+
+    def deposit(self, deposit_amount: str) -> int | list[str]:
+        """入金
+        Args:
+            deposit_amount (int): 入金額
+        Returns:
+            int: 残高
+        """
+        to_int_deposit_amount = int(deposit_amount)
+        deposit_validation = DepositValidation(to_int_deposit_amount)
+        if deposit_validation.validate():
+            self._balance += to_int_deposit_amount
+            return self._balance
+        else:
+            return deposit_validation.errors
+
+    def withdrawal(self, withdrawal_amount: str) -> int | list[str]:
+        """出金
+        Args:
+            withdrawal_amount (int): 出金額
+        Returns:
+            int: 残高
+            str: 残高不足のメッセージ
+        """
+        to_int_deposit_amount = int(withdrawal_amount)
+        withdraw_validation = WithdrawalValidation(self._balance, to_int_deposit_amount)
+        if withdraw_validation.validate():
+            self._balance -= to_int_deposit_amount
+            return self._balance
+        else:
+            return withdraw_validation.errors
+
+
+@dataclass
+class DepositValidation:
+    """validate
+    預金時のvalidate
+
+    Attributes:
+        amount(int): 入金額
+    """
+
+    amount: int
+
+    def validate(self) -> bool:
         """金額の検証
 
         Args:
@@ -41,61 +92,72 @@ class BankAccount:
         Returns:
             bool: 金額が絶対値であればTrueを返す。
         """
-        try:
-            if amount == abs(amount):
-                return True
-            else:
-                return False
-        except ValueError:
-            raise ValueError("数値を入力してください。")
+        self._errors = []
 
-    def deposit(self, deposit_amount: int) -> int | str:
-        """入金
-        Args:
-            deposit_amount (int): 入金額
-        Returns:
-            int: 残高
-        """
-        try:
-            if BankAccount.validate_amount(deposit_amount):
-                self.__balance += deposit_amount
-                return self.__balance
-            else:
-                return "無効な入力です。"
-        except ValueError:
-            raise ValueError("数値を入力してください。")
+        if self.amount is None:
+            self._errors.append(ERROR_MESSAGE["not_entry"])
+        elif self.amount < 0:
+            self._errors.append(ERROR_MESSAGE["value_greater_than"])
 
-    def withdrawal(self, withdrawal_amount: int) -> int | str:
-        """出金
+        return True if len(self._errors) == 0 else False
+
+    @property
+    def errors(self) -> list[str]:
+        return self._errors if self._errors else []
+
+
+@dataclass
+class WithdrawalValidation:
+    """validate
+    引き出し時のvalidate
+
+    Attributes:
+        balance(int): 残高
+        amount(int): 入金額
+    """
+
+    balance: int
+    amount: int
+
+    def validate(self) -> bool:
+        """金額の検証
+
         Args:
-            withdrawal_amount (int): 出金額
+            balance(int): 残高
+            amount (int): 入力された金額
+
         Returns:
-            int: 残高
-            str: 残高不足のメッセージ
+            bool: 金額が絶対値であればTrueを返す。
         """
-        try:
-            if self.__balance >= withdrawal_amount and BankAccount.validate_amount(
-                withdrawal_amount
-            ):
-                self.__balance -= withdrawal_amount
-                return self.__balance
-            else:
-                return "無効な入力又は残高不足です。"
-        except ValueError:
-            raise ValueError("数値を入力してください。")
+        self._errors = []
+        if self.balance < self.amount:
+            self._errors.append(ERROR_MESSAGE["insufficient_balance"])
+        elif self.amount < 0:
+            self._errors.append(ERROR_MESSAGE["value_greater_than"])
+        elif self.amount is None:
+            self._errors.append(ERROR_MESSAGE["not_entry"])
+
+        return True if len(self._errors) == 0 else False
+
+    @property
+    def errors(self) -> list[str]:
+        return self._errors if self._errors else []
 
 
 # 残金の確認
-bank_amount = BankAccount(100)
-print(f"残金:{bank_amount.balance}")
+bank_account = BankAccount(100)
+print(f"残金:{bank_account._balance}")
+
+# ATM機能のインスタンス化
+atm = ATM(bank_account._balance)
 
 # 入金
-deposit_amount = bank_amount.deposit(int(input("入金額を入力してください。")))
+deposit_amount = atm.deposit(input("入金額を入力してください。"))
 print(f"入金の実行:{deposit_amount}")
 
 # 出金の実行
-withdrawal_amount = bank_amount.withdrawal(int(input("出金額を入力してください。")))
+withdrawal_amount = atm.withdrawal(input("出金額を入力してください。"))
 print(f"出金の実行:{withdrawal_amount}")
 
 # 残金の確認
-print(f"残金:{bank_amount.balance}")
+print(f"残金:{atm._balance}")
