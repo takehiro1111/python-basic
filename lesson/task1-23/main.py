@@ -101,7 +101,7 @@ class BaseValidation:
         return self._errors
 
     @property
-    def is_valid(self):
+    def is_valid(self) -> bool:
         return len(self._errors) == 0
 
 
