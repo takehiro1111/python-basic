@@ -10,7 +10,7 @@
 
 from dataclasses import dataclass
 
-from setting import ERROR_MESSAGE
+from setting import ERROR_MESSAGE, GUIDE_MENU_MSG, GUIDE_NUMBER
 
 
 @dataclass
@@ -33,22 +33,30 @@ class BankAccount:
         """
         return self._balance
 
+    @my_account_balance.setter
+    def my_account_balance(self, result_after_atm: int) -> None:
+        """ATM処理後の残高更新
+
+        Args:
+            int: ATMクラスのメソッドで処理した後の残高
+        """
+        self._balance = result_after_atm
+
 
 class ATM:
     """ATM
     預金、引き出しの機能を持つ。
     """
 
-    def __init__(self):
-        self.balance = BankAccount.my_account_balance
+    def __init__(self, bank_account: BankAccount) -> None:
+        self.bank_account = bank_account
+        self.balance = bank_account.my_account_balance
 
-    def guide_menu(self, menu_num: int):
-        if menu_num == 0:
-            return ATM.deposit()
-        elif menu_num == 1:
-            return ATM.withdrawal()
-        else:
-            return ATM.guide_menu(menu_num)
+    def guide_menu(self, menu_num: int) -> int | list[str] | None:
+        if menu_num == GUIDE_NUMBER["deposit"]:
+            return self.deposit(input(GUIDE_MENU_MSG["deposit"]))
+        elif menu_num == GUIDE_NUMBER["withdraw"]:
+            return self.withdrawal(input(GUIDE_MENU_MSG["withdraw"]))
 
     def deposit(self, deposit_amount: str) -> int | list[str]:
         """入金
@@ -61,11 +69,12 @@ class ATM:
         deposit_validation = DepositValidation(to_int_deposit_amount)
         if deposit_validation.validate():
             self.balance += to_int_deposit_amount
+            self.bank_account.my_account_balance = self.balance
             return self.balance
         else:
-            return deposit_validation.errors
+            print(deposit_validation.errors[0])
 
-    def withdrawal(self, withdrawal_amount: str) -> int | list[str]:
+    def withdrawal(self, withdrawal_amount: str) -> int | None:
         """出金
         Args:
             withdrawal_amount (int): 出金額
@@ -73,25 +82,25 @@ class ATM:
             int: 残高
             str: 残高不足のメッセージ
         """
-        to_int_deposit_amount = int(withdrawal_amount)
-        withdraw_validation = WithdrawalValidation(self.balance, to_int_deposit_amount)
+        to_int_withdraw_amount = int(withdrawal_amount)
+        withdraw_validation = WithdrawalValidation(self.balance, to_int_withdraw_amount)
         if withdraw_validation.validate():
-            self.balance -= to_int_deposit_amount
+            self.balance -= to_int_withdraw_amount
+            self.bank_account.my_account_balance = self.balance
             return self.balance
         else:
-            return withdraw_validation.errors
+            print(withdraw_validation._errors[0])
 
 
-@dataclass
 class BaseValidation:
-    _errors: str
+    def __init__(self) -> None:
+        self._errors = []
 
     @property
     def errors(self) -> list[str]:
-        return self._errors if self._errors else []
+        return self._errors
 
 
-@dataclass
 class DepositValidation(BaseValidation):
     """validate
     預金時のvalidate
@@ -101,6 +110,7 @@ class DepositValidation(BaseValidation):
     """
 
     def __init__(self, amount: int) -> None:
+        super().__init__()
         self.amount = amount
 
     def validate(self) -> bool:
@@ -112,17 +122,14 @@ class DepositValidation(BaseValidation):
         Returns:
             bool: 金額が絶対値であればTrueを返す。
         """
-        self._errors = []
-
         if self.amount is None:
             self._errors.append(ERROR_MESSAGE["not_entry"])
         elif self.amount < 0:
             self._errors.append(ERROR_MESSAGE["value_greater_than"])
 
-        return True if len(self._errors) == 0 else False
+        return len(self._errors) == 0
 
 
-@dataclass
 class WithdrawalValidation(BaseValidation):
     """validate
     引き出し時のvalidate
@@ -132,8 +139,10 @@ class WithdrawalValidation(BaseValidation):
         amount(int): 入金額
     """
 
-    balance: int
-    amount: int
+    def __init__(self, balance: int, amount: int) -> None:
+        super().__init__()
+        self.amount = amount
+        self.balance = balance
 
     def validate(self) -> bool:
         """金額の検証
@@ -145,7 +154,6 @@ class WithdrawalValidation(BaseValidation):
         Returns:
             bool: 金額が絶対値であればTrueを返す。
         """
-        self._errors = []
         if self.balance < self.amount:
             self._errors.append(ERROR_MESSAGE["insufficient_balance"])
         elif self.amount < 0:
@@ -153,23 +161,23 @@ class WithdrawalValidation(BaseValidation):
         elif self.amount is None:
             self._errors.append(ERROR_MESSAGE["not_entry"])
 
-        return True if len(self._errors) == 0 else False
+        return len(self._errors) == 0
 
 
-# 残金の確認
-bank_account = BankAccount(100)
-print(f"残金:{bank_account._balance}")
+def main() -> None:
+    """メイン処理"""
+    # 残金の確認
+    bank_account = BankAccount(100)
+    print(f"残金:{bank_account.my_account_balance}")
 
-# ATM機能のインスタンス化
-atm = ATM()
+    # ATM機能のインスタンス化
+    atm = ATM(bank_account)
 
-# 入金
-deposit_amount = atm.deposit(input("入金額を入力してください。"))
-print(f"入金の実行:{deposit_amount}")
+    # ATMの操作案内
+    atm.guide_menu(int(input(GUIDE_MENU_MSG["front"])))
 
-# 出金の実行
-withdrawal_amount = atm.withdrawal(input("出金額を入力してください。"))
-print(f"出金の実行:{withdrawal_amount}")
+    print(f"残金:{bank_account.my_account_balance}")
 
-# 残金の確認
-print(f"残金:{atm.balance}")
+
+if __name__ == "__main__":
+    main()
