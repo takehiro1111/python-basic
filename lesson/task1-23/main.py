@@ -100,6 +100,10 @@ class BaseValidation:
     def errors(self) -> list[str]:
         return self._errors
 
+    @property
+    def is_valid(self):
+        return len(self._errors) == 0
+
 
 class DepositValidation(BaseValidation):
     """validate
@@ -127,7 +131,7 @@ class DepositValidation(BaseValidation):
         elif self.amount < 0:
             self._errors.append(ERROR_MESSAGE["value_greater_than"])
 
-        return len(self._errors) == 0
+        return self.is_valid
 
 
 class WithdrawalValidation(BaseValidation):
@@ -161,7 +165,7 @@ class WithdrawalValidation(BaseValidation):
         elif self.amount is None:
             self._errors.append(ERROR_MESSAGE["not_entry"])
 
-        return len(self._errors) == 0
+        return self.is_valid
 
 
 def main() -> None:
