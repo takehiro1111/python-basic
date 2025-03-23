@@ -100,6 +100,10 @@ class BaseValidation:
     def errors(self) -> list[str]:
         return self._errors
 
+    @errors.setter
+    def errors(self, error_msg: str) -> None:
+        self._errors.append(error_msg)
+
     @property
     def is_valid(self) -> bool:
         return len(self._errors) == 0
@@ -127,9 +131,9 @@ class DepositValidation(BaseValidation):
             bool: 金額が絶対値であればTrueを返す。
         """
         if self.amount is None:
-            self._errors.append(ERROR_MESSAGE["not_entry"])
+            self.errors = ERROR_MESSAGE["not_entry"]
         elif self.amount < 0:
-            self._errors.append(ERROR_MESSAGE["value_greater_than"])
+            self.errors = ERROR_MESSAGE["value_greater_than"]
 
         return self.is_valid
 
@@ -159,11 +163,11 @@ class WithdrawalValidation(BaseValidation):
             bool: 金額が絶対値であればTrueを返す。
         """
         if self.balance < self.amount:
-            self._errors.append(ERROR_MESSAGE["insufficient_balance"])
+            self.errors = ERROR_MESSAGE["insufficient_balance"]
         elif self.amount < 0:
-            self._errors.append(ERROR_MESSAGE["value_greater_than"])
+            self.errors = ERROR_MESSAGE["value_greater_than"]
         elif self.amount is None:
-            self._errors.append(ERROR_MESSAGE["not_entry"])
+            self.errors = ERROR_MESSAGE["not_entry"]
 
         return self.is_valid
 
