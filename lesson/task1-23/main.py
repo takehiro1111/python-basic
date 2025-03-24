@@ -70,9 +70,7 @@ class ATM:
             self.bank_account.my_account_balance += to_int_deposit_amount
             return self.bank_account.my_account_balance
 
-        for i in deposit_validation.errors:
-            print(i)
-        return None
+        list(map(print, deposit_validation.errors))
 
     def withdrawal(self, withdrawal_amount: str) -> int | None:
         """出金
@@ -90,9 +88,7 @@ class ATM:
             self.bank_account.my_account_balance -= to_int_withdraw_amount
             return self.bank_account.my_account_balance
 
-        for i in withdraw_validation.errors:
-            print(i)
-        return None
+        list(map(print, withdraw_validation.errors))
 
 
 class BaseValidation:
