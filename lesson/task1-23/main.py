@@ -50,7 +50,6 @@ class ATM:
 
     def __init__(self, bank_account: BankAccount) -> None:
         self.bank_account = bank_account
-        self.balance = bank_account.my_account_balance
 
     def guide_menu(self, menu_num: int) -> int | list[str] | None:
         if menu_num == GUIDE_NUMBER["deposit"]:
@@ -58,7 +57,7 @@ class ATM:
         elif menu_num == GUIDE_NUMBER["withdraw"]:
             return self.withdrawal(input(GUIDE_MENU_MSG["withdraw"]))
 
-    def deposit(self, deposit_amount: str) -> int | list[str]:
+    def deposit(self, deposit_amount: str) -> int | None:
         """入金
         Args:
             deposit_amount (int): 入金額
@@ -68,11 +67,12 @@ class ATM:
         to_int_deposit_amount = int(deposit_amount)
         deposit_validation = DepositValidation(to_int_deposit_amount)
         if deposit_validation.validate():
-            self.balance += to_int_deposit_amount
-            self.bank_account.my_account_balance = self.balance
-            return self.balance
-        else:
-            print(deposit_validation.errors[0])
+            self.bank_account.my_account_balance += to_int_deposit_amount
+            return self.bank_account.my_account_balance
+
+        for i in deposit_validation.errors:
+            print(i)
+        return None
 
     def withdrawal(self, withdrawal_amount: str) -> int | None:
         """出金
@@ -83,13 +83,16 @@ class ATM:
             str: 残高不足のメッセージ
         """
         to_int_withdraw_amount = int(withdrawal_amount)
-        withdraw_validation = WithdrawalValidation(self.balance, to_int_withdraw_amount)
+        withdraw_validation = WithdrawalValidation(
+            self.bank_account.my_account_balance, to_int_withdraw_amount
+        )
         if withdraw_validation.validate():
-            self.balance -= to_int_withdraw_amount
-            self.bank_account.my_account_balance = self.balance
-            return self.balance
-        else:
-            print(withdraw_validation._errors[0])
+            self.bank_account.my_account_balance -= to_int_withdraw_amount
+            return self.bank_account.my_account_balance
+
+        for i in withdraw_validation.errors:
+            print(i)
+        return None
 
 
 class BaseValidation:
@@ -132,7 +135,7 @@ class DepositValidation(BaseValidation):
         """
         if self.amount is None:
             self.errors = ERROR_MESSAGE["not_entry"]
-        elif self.amount < 0:
+        elif self.amount < 1:
             self.errors = ERROR_MESSAGE["value_greater_than"]
 
         return self.is_valid
@@ -164,7 +167,7 @@ class WithdrawalValidation(BaseValidation):
         """
         if self.balance < self.amount:
             self.errors = ERROR_MESSAGE["insufficient_balance"]
-        elif self.amount < 0:
+        elif self.amount < 1:
             self.errors = ERROR_MESSAGE["value_greater_than"]
         elif self.amount is None:
             self.errors = ERROR_MESSAGE["not_entry"]
