@@ -43,15 +43,115 @@ class BankAccount:
         self._balance = result_after_atm
 
 
+class Auth:
+    """ユーザーIDと暗証番号による認証機能"""
+
+    def __init__(self):
+        self.authenticated_user_id = None
+
+    @property
+    def user_list(self) -> list[dict]:
+        """ユーザーごとにIDと暗証番号のリストをデータとして保持。
+
+        Returns:
+            list[dict]: ATMの処理に必要な情報
+        """
+        users = [{"id": "takehiro1111", "pin": 1234}, {"id": "test-user", "pin": 5678}]
+        return users
+
+    @property
+    def return_user_ids(self) -> list[str]:
+        """入力されたユーザーIDと比較するために保存されているユーザーIDの一覧を取得
+
+        Returns:
+            list[string]: 全ユーザーのID
+        """
+        return [user["id"] for user in self.user_list]
+
+    def get_user_pin(self, user_id: str) -> int | None:
+        """入力された暗証番号と比較するために保存されているそのユーザーの暗証番号を取得
+
+        Args:
+            user_id (str): ユーザーID
+
+        Returns:
+            str | None: 登録済みのユーザーの場合に暗証番号を返す。
+        """
+        for user in self.user_list:
+            if user_id == user["id"]:
+                return user["pin"]
+
+        return None
+
+    def auth_user_id(self, input_user_id: str, attempt_check=3) -> bool:
+        """ユーザーIDによる認証
+
+        Args:
+            input_user_id (str): ユーザーから入力されたID
+            attempt_check (int, optional): 再試行回数の上限をデフォルト値として設定
+
+        Returns:
+            bool: ユーザーIDによる認証の成否
+        """
+        if attempt_check == 0:
+            print("ユーザーIDの入力回数を超過しました。最初からやり直してください。")
+            return False
+
+        if input_user_id in self.return_user_ids:
+            self.authenticated_user_id = input_user_id
+            return True
+        elif input_user_id not in self.return_user_ids:
+            attempt_check -= 1
+            return self.auth_user_id(
+                input("ユーザーiDを入力してください。(英文字 + 数字)"), attempt_check
+            )
+
+    def auth_user_pin(self, input_user_pin: int, attempt_check=3) -> bool:
+        """暗証番号による認証
+
+        Args:
+            input_user_pin (int): ユーザーから入力された暗証番号
+            attempt_check (int, optional): 再試行回数の上限をデフォルト値として設定
+
+        Returns:
+            bool: 暗証番号による認証の成否
+        """
+        if attempt_check == 0:
+            print("暗証番号の入力回数を超過しました。最初からやり直してください。")
+            return False
+
+        # 入力時に比較対象になる暗証番号の取得
+        correct_pin = self.get_user_pin(self.authenticated_user_id)
+
+        if input_user_pin == correct_pin:
+            print("正しい暗証番号です。")
+            return True
+        elif input_user_pin != correct_pin:
+            print("暗証番号が間違っています。再入力してください。")
+            attempt_check -= 1
+            return self.auth_user_pin(
+                int(input("暗証番号を入力してください。")), attempt_check
+            )
+
+
 class ATM:
     """ATM
     預金、引き出しの機能を持つ。
     """
 
-    def __init__(self, bank_account: BankAccount) -> None:
+    def __init__(self, bank_account: BankAccount, auth: Auth) -> None:
         self.bank_account = bank_account
+        self.auth = auth
 
     def guide_menu(self, menu_num: int) -> int | list[str] | None:
+        """_summary_
+
+        Args:
+            menu_num (int): ATMの処理を選択する番号
+
+        Returns:
+            int | list[str] | None: メニュー選択後に入金または出勤処理の関数を返す。
+        """
         if menu_num == GUIDE_NUMBER["deposit"]:
             return self.deposit(input(GUIDE_MENU_MSG["deposit"]))
         elif menu_num == GUIDE_NUMBER["withdraw"]:
@@ -66,11 +166,19 @@ class ATM:
         """
         to_int_deposit_amount = int(deposit_amount)
         deposit_validation = DepositValidation(to_int_deposit_amount)
-        if deposit_validation.validate():
-            self.bank_account.my_account_balance += to_int_deposit_amount
-            return self.bank_account.my_account_balance
+        try:
+            if deposit_validation.validate() and self.auth.auth_user_pin(
+                int(input("暗証番号を入力してください。"))
+            ):
+                self.bank_account.my_account_balance += to_int_deposit_amount
+                print(f"{to_int_deposit_amount}円を入金しました。")
+                return self.bank_account.my_account_balance
 
-        list(map(print, deposit_validation.errors))
+            return self.show_error_msg(deposit_validation.errors)
+
+        except ValueError:
+            print("暗証番号は数字4桁で入力してください。")
+            return None
 
     def withdrawal(self, withdrawal_amount: str) -> int | None:
         """出金
@@ -84,11 +192,25 @@ class ATM:
         withdraw_validation = WithdrawalValidation(
             self.bank_account.my_account_balance, to_int_withdraw_amount
         )
-        if withdraw_validation.validate():
-            self.bank_account.my_account_balance -= to_int_withdraw_amount
-            return self.bank_account.my_account_balance
+        try:
+            if withdraw_validation.validate() and self.auth.auth_user_pin(
+                int(input("暗証番号を入力してください。"))
+            ):
+                self.bank_account.my_account_balance -= to_int_withdraw_amount
+                print(f"{to_int_withdraw_amount}円を引き出しました。")
+                return self.bank_account.my_account_balance
 
-        list(map(print, withdraw_validation.errors))
+            return self.show_error_msg(withdraw_validation.errors)
+
+        except ValueError:
+            print("暗証番号は数字4桁で入力してください。")
+            return None
+
+    @staticmethod
+    def show_error_msg(error_msg: list[str]) -> None:
+        for msg in error_msg:
+            print(msg)
+        return None
 
 
 class BaseValidation:
@@ -173,17 +295,24 @@ class WithdrawalValidation(BaseValidation):
 
 def main() -> None:
     """メイン処理"""
-    # 残金の確認
+    # 口座のインスタンス化
     bank_account = BankAccount(100)
-    print(f"残金:{bank_account.my_account_balance}")
+
+    # 認証機能のインスタンス化
+    auth = Auth()
 
     # ATM機能のインスタンス化
-    atm = ATM(bank_account)
+    atm = ATM(bank_account, auth)
 
-    # ATMの操作案内
-    atm.guide_menu(int(input(GUIDE_MENU_MSG["front"])))
-
+    # 残金の確認
     print(f"残金:{bank_account.my_account_balance}")
+
+    # ユーザーIDの認証
+    if auth.auth_user_id(input("ユーザーIDを入力してください。(英文字 + 数字)")):
+        # ATMの操作案内
+        atm.guide_menu(int(input(GUIDE_MENU_MSG["front"])))
+
+        print(f"残金:{bank_account.my_account_balance}")
 
 
 if __name__ == "__main__":
