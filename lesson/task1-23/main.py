@@ -18,18 +18,24 @@ class AccountManager:
     認証に必要なユーザーIDと暗証番号を保持。
 
     """
+    # 直接参照はしない
+    _USERS: list[dict] = [
+        {"id": "takehiro1111", "pin": 1234},
+        {"id": "Michael", "pin": 5678},
+    ]
 
-    def account_auth_info(self) -> list[dict]:
+    @classmethod
+    def account_info(cls) -> list[dict]:
         """ユーザーごとにIDと暗証番号のリストをデータとして保持。
 
         Returns:
-            list[dict]: ATMの処理に必要な情報
+            list[dict]: ユーザーの属性情報
         """
-        users = [
-            {"id": "takehiro1111", "pin": 1234},
-            {"id": "Michael", "pin": 5678},
-        ]
-        return users
+        return cls._USERS
+
+    # 認証されたユーザーIDのみ_USERSから引っ張って返したい。
+    def get_auth_user_by_id(*args):
+
 
 
 @dataclass
@@ -67,10 +73,9 @@ class ATM:
     預金、引き出しの機能を持つ。
     """
 
-    def __init__(self, bank_account: BankAccount, auth_manager=AccountManager) -> None:
+    def __init__(self, bank_account: BankAccount) -> None:
         self.bank_account = bank_account
         self.authenticated_user_id = None
-        self.auth_manager = auth_manager
 
     def guide_menu(self, menu_num: int) -> int | list[str] | None:
         """_summary_
@@ -97,7 +102,7 @@ class ATM:
         deposit_validation = DepositValidation(to_int_deposit_amount)
 
         if deposit_validation.validate() and self.auth_user_pin(
-            int(input(ATM_PIN_MSG["input_pin"]))
+            input(ATM_PIN_MSG["input_pin"])
         ):
             self.bank_account.my_account_balance += to_int_deposit_amount
             print(f"{to_int_deposit_amount}円を入金しました。")
@@ -134,13 +139,13 @@ class ATM:
         return None
 
     @property
-    def return_user_ids(self) -> list[str]:
+    def get_user_ids(self) -> list[str]:
         """入力されたユーザーIDと比較するために保存されているユーザーIDの一覧を取得
 
         Returns:
             list[string]: 全ユーザーのID
         """
-        return [user["id"] for user in self.auth_manager.account_auth_info(self)]
+        return [user["id"] for user in AccountManager.account_info()]
 
     def get_user_pin(self, user_id: str) -> int | None:
         """入力された暗証番号と比較するために保存されているそのユーザーの暗証番号を取得
@@ -151,7 +156,7 @@ class ATM:
         Returns:
             str | None: 登録済みのユーザーの場合に暗証番号を返す。
         """
-        for user in self.auth_manager.account_auth_info(self):
+        for user in AccountManager.account_info():
             if user_id == user["id"]:
                 return user["pin"]
 
@@ -171,10 +176,10 @@ class ATM:
             print(ATM_ID_MSG["exceed_limit_input_id"])
             return False
 
-        if input_user_id in self.return_user_ids:
+        if input_user_id in self.get_user_ids:
             self.authenticated_user_id = input_user_id
             return True
-        elif input_user_id not in self.return_user_ids:
+        elif input_user_id not in self.get_user_ids:
             attempt_check -= 1
             return self.auth_user_id(input(ATM_ID_MSG["input_user_id"]), attempt_check)
 
@@ -295,6 +300,7 @@ class WithdrawalValidation(BaseValidation):
 
 def main() -> None:
     """メイン処理"""
+
     # 口座のインスタンス化
     bank_account = BankAccount(100)
 
@@ -302,14 +308,14 @@ def main() -> None:
     atm = ATM(bank_account)
 
     # 残金の確認
-    print(f"残金:{bank_account.my_account_balance}")
+    print(f"残金:{bank_account.my_account_balance}円")
 
     # ユーザーIDの認証
     if atm.auth_user_id(input(ATM_ID_MSG["input_user_id"])):
         # ATMの操作案内
         atm.guide_menu(int(input(GUIDE_MENU_MSG["front"])))
 
-        print(f"残金:{bank_account.my_account_balance}")
+        print(f"残金:{bank_account.my_account_balance}円")
 
 
 if __name__ == "__main__":
