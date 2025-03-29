@@ -3,6 +3,7 @@ ERROR_MESSAGE = {
     "not_entry": "金額が入力されていません。",
     "value_greater_than": "1以上の数字を入力してください。",
     "to_int": "数値で入力してください。",
+    "invalid_amount": "適切な金額で入力してください。"
 }
 
 GUIDE_NUMBER = {
@@ -27,4 +28,8 @@ ATM_PIN_MSG = {
     "mistake_input_pin": "暗証番号が間違っています。再入力してください。",
     "correct_input_pin": "正しい暗証番号です。",
     "exceed_limit_input_pin": "暗証番号の入力回数を超過しました。最初からやり直してください。",
+}
+
+ATM_INPUT_MSG = {
+    "exceed_limit": "入力制限を超過しました。最初からやり直してください。"
 }

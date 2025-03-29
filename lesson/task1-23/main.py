@@ -10,7 +10,14 @@
 
 from dataclasses import dataclass
 
-from setting import ATM_ID_MSG, ATM_PIN_MSG, ERROR_MESSAGE, GUIDE_MENU_MSG, GUIDE_NUMBER
+from setting import (
+    ATM_ID_MSG,
+    ATM_INPUT_MSG,
+    ATM_PIN_MSG,
+    ERROR_MESSAGE,
+    GUIDE_MENU_MSG,
+    GUIDE_NUMBER,
+)
 
 
 class AccountManager:
@@ -18,11 +25,15 @@ class AccountManager:
     認証に必要なユーザーIDと暗証番号を保持。
 
     """
+
     # 直接参照はしない
     _USERS: list[dict] = [
         {"id": "takehiro1111", "pin": 1234},
         {"id": "Michael", "pin": 5678},
     ]
+
+    def __init__(self):
+        self._authenticated_user_pin = None
 
     @classmethod
     def account_info(cls) -> list[dict]:
@@ -33,9 +44,67 @@ class AccountManager:
         """
         return cls._USERS
 
-    # 認証されたユーザーIDのみ_USERSから引っ張って返したい。
-    def get_auth_user_by_id(*args):
+    def get_auth_user_by_id(self, input_user_id: str) -> dict | None:
+        for user in self.account_info():
+            if input_user_id == user["id"]:
+                self._authenticated_user_id = user["pin"]
+                return user
+        return None
 
+    def auth_user_id(self, input_user_id: str, attempt_check=3) -> bool:
+        """ユーザーIDによる認証
+
+        Args:
+            input_user_id (str): ユーザーから入力されたID
+            attempt_check (int, optional): 再試行回数の上限をデフォルト値として設定
+
+        Returns:
+            bool: ユーザーIDによる認証の成否
+        """
+        if attempt_check == 0:
+            print(ATM_ID_MSG["exceed_limit_input_id"])
+            return False
+
+        has_auth_user = self.get_auth_user_by_id(input_user_id)
+
+        if has_auth_user is None:
+            attempt_check -= 1
+            return self.auth_user_id(input(ATM_ID_MSG["input_user_id"]), attempt_check)
+        elif has_auth_user is not None:
+            self._authenticated_user_pin = has_auth_user["pin"]
+            return True
+
+    def auth_user_pin(self, input_user_pin: str, attempt_check=3) -> bool:
+        """暗証番号による認証
+
+        Args:
+            input_user_pin (int): ユーザーから入力された暗証番号
+            attempt_check (int, optional): 再試行回数の上限をデフォルト値として設定
+
+        Returns:
+            bool: 暗証番号による認証の成否
+        """
+        if attempt_check == 0:
+            print(ATM_PIN_MSG["exceed_limit_input_pin"])
+            return False
+
+        try:
+            to_int_input_user_pin = int(input_user_pin)
+
+            if to_int_input_user_pin == self._authenticated_user_pin:
+                print(ATM_PIN_MSG["correct_input_pin"])
+                return True
+            elif to_int_input_user_pin != self._authenticated_user_pin:
+                print(ATM_PIN_MSG["mistake_input_pin"])
+                attempt_check -= 1
+                return self.auth_user_pin(
+                    input(ATM_PIN_MSG["input_pin"]), attempt_check
+                )
+
+        except ValueError:
+            print(ATM_PIN_MSG["type_err_input_pin"])
+            attempt_check -= 1
+            return self.auth_user_pin(input(ATM_PIN_MSG["input_pin"]), attempt_check)
 
 
 @dataclass
@@ -73,11 +142,15 @@ class ATM:
     預金、引き出しの機能を持つ。
     """
 
-    def __init__(self, bank_account: BankAccount) -> None:
+    def __init__(
+        self, bank_account: BankAccount, account_manager: AccountManager
+    ) -> None:
         self.bank_account = bank_account
-        self.authenticated_user_id = None
+        self.account_manager = (
+            account_manager  # インスタンスメソッドを使用したいため初期化。
+        )
 
-    def guide_menu(self, menu_num: int) -> int | list[str] | None:
+    def guide_menu(self, menu_num: str, attempt_check=3) -> int | list[str] | None:
         """_summary_
 
         Args:
@@ -86,31 +159,51 @@ class ATM:
         Returns:
             int | list[str] | None: メニュー選択後に入金または出勤処理の関数を返す。
         """
-        if menu_num == GUIDE_NUMBER["deposit"]:
-            return self.deposit(input(GUIDE_MENU_MSG["deposit"]))
-        elif menu_num == GUIDE_NUMBER["withdraw"]:
-            return self.withdrawal(input(GUIDE_MENU_MSG["withdraw"]))
+        try:
+            if attempt_check == 0:
+                print(ATM_INPUT_MSG["exceed_limit"])
+                return
 
-    def deposit(self, deposit_amount: str) -> int | bool:
+            has_int_menu_num = int(menu_num)
+            if has_int_menu_num == GUIDE_NUMBER["deposit"]:
+                return self.deposit(input(GUIDE_MENU_MSG["deposit"]))
+            elif has_int_menu_num == GUIDE_NUMBER["withdraw"]:
+                return self.withdrawal(input(GUIDE_MENU_MSG["withdraw"]))
+
+        except ValueError:
+            print(ERROR_MESSAGE["to_int"])
+            attempt_check -= 1
+            self.guide_menu(input(GUIDE_MENU_MSG["front"]), attempt_check)
+
+    def deposit(self, deposit_amount: str, attempt_check=3) -> int | bool:
         """入金
         Args:
             deposit_amount (int): 入金額
         Returns:
             int: 残高
         """
-        to_int_deposit_amount = int(deposit_amount)
-        deposit_validation = DepositValidation(to_int_deposit_amount)
+        try:
+            if attempt_check == 0:
+                print(ATM_INPUT_MSG["exceed_limit"])
+                return
 
-        if deposit_validation.validate() and self.auth_user_pin(
-            input(ATM_PIN_MSG["input_pin"])
-        ):
-            self.bank_account.my_account_balance += to_int_deposit_amount
-            print(f"{to_int_deposit_amount}円を入金しました。")
-            return self.bank_account.my_account_balance
+            to_int_deposit_amount = int(deposit_amount)
+            deposit_validation = DepositValidation(to_int_deposit_amount)
 
-        return self.show_error_msg(deposit_validation.errors)
+            if deposit_validation.validate() and self.account_manager.auth_user_pin(
+                input(ATM_PIN_MSG["input_pin"])
+            ):
+                self.bank_account.my_account_balance += to_int_deposit_amount
+                print(f"{to_int_deposit_amount}円を入金しました。")
+                return self.bank_account.my_account_balance
 
-    def withdrawal(self, withdrawal_amount: str) -> int | None:
+            return self.show_error_msg(deposit_validation.errors)
+        except ValueError:
+            print(ERROR_MESSAGE["to_int"])
+            attempt_check -= 1
+            self.deposit(input(GUIDE_MENU_MSG["deposit"]), attempt_check)
+
+    def withdrawal(self, withdrawal_amount: str, attempt_check=3) -> int | None:
         """出金
         Args:
             withdrawal_amount (int): 出金額
@@ -118,104 +211,39 @@ class ATM:
             int: 残高
             str: 残高不足のメッセージ
         """
-        to_int_withdraw_amount = int(withdrawal_amount)
-        withdraw_validation = WithdrawalValidation(
-            self.bank_account.my_account_balance, to_int_withdraw_amount
-        )
+        try:
+            if attempt_check == 0:
+                print(ATM_INPUT_MSG["exceed_limit"])
+                return
 
-        if withdraw_validation.validate() and self.auth_user_pin(
-            input(ATM_PIN_MSG["input_pin"])
-        ):
-            self.bank_account.my_account_balance -= to_int_withdraw_amount
-            print(f"{to_int_withdraw_amount}円を引き出しました。")
-            return self.bank_account.my_account_balance
+            to_int_withdraw_amount = int(withdrawal_amount)
+            withdraw_validation = WithdrawalValidation(
+                self.bank_account.my_account_balance, to_int_withdraw_amount
+            )
 
-        return self.show_error_msg(withdraw_validation.errors)
+            if withdraw_validation.validate():
+                if self.account_manager.auth_user_pin(input(ATM_PIN_MSG["input_pin"])):
+                    self.bank_account.my_account_balance -= to_int_withdraw_amount
+                    print(f"{to_int_withdraw_amount}円を引き出しました。")
+                    return self.bank_account.my_account_balance
+            # 出金額が残高以上などのValueとしてエラーにはならない場合の処理としてelseを使用している。
+            else:
+                attempt_check -= 1
+                print(ERROR_MESSAGE["invalid_amount"])
+                return self.withdrawal(input(GUIDE_MENU_MSG["withdraw"]), attempt_check)
+
+            return self.show_error_msg(withdraw_validation.errors)
+
+        except ValueError:
+            print(ERROR_MESSAGE["to_int"])
+            attempt_check -= 1
+            return self.withdrawal(input(GUIDE_MENU_MSG["withdraw"]), attempt_check)
 
     @staticmethod
     def show_error_msg(error_msg: list[str]) -> None:
         for msg in error_msg:
             print(msg)
         return None
-
-    @property
-    def get_user_ids(self) -> list[str]:
-        """入力されたユーザーIDと比較するために保存されているユーザーIDの一覧を取得
-
-        Returns:
-            list[string]: 全ユーザーのID
-        """
-        return [user["id"] for user in AccountManager.account_info()]
-
-    def get_user_pin(self, user_id: str) -> int | None:
-        """入力された暗証番号と比較するために保存されているそのユーザーの暗証番号を取得
-
-        Args:
-            user_id (str): ユーザーID
-
-        Returns:
-            str | None: 登録済みのユーザーの場合に暗証番号を返す。
-        """
-        for user in AccountManager.account_info():
-            if user_id == user["id"]:
-                return user["pin"]
-
-        return None
-
-    def auth_user_id(self, input_user_id: str, attempt_check=3) -> bool:
-        """ユーザーIDによる認証
-
-        Args:
-            input_user_id (str): ユーザーから入力されたID
-            attempt_check (int, optional): 再試行回数の上限をデフォルト値として設定
-
-        Returns:
-            bool: ユーザーIDによる認証の成否
-        """
-        if attempt_check == 0:
-            print(ATM_ID_MSG["exceed_limit_input_id"])
-            return False
-
-        if input_user_id in self.get_user_ids:
-            self.authenticated_user_id = input_user_id
-            return True
-        elif input_user_id not in self.get_user_ids:
-            attempt_check -= 1
-            return self.auth_user_id(input(ATM_ID_MSG["input_user_id"]), attempt_check)
-
-    def auth_user_pin(self, input_user_pin: str, attempt_check=3) -> bool:
-        """暗証番号による認証
-
-        Args:
-            input_user_pin (int): ユーザーから入力された暗証番号
-            attempt_check (int, optional): 再試行回数の上限をデフォルト値として設定
-
-        Returns:
-            bool: 暗証番号による認証の成否
-        """
-        if attempt_check == 0:
-            print(ATM_PIN_MSG["exceed_limit_input_pin"])
-            return False
-
-        try:
-            to_int_input_user_pin = int(input_user_pin)
-            # 入力時に比較対象になる暗証番号の取得
-            correct_pin = self.get_user_pin(self.authenticated_user_id)
-
-            if to_int_input_user_pin == correct_pin:
-                print(ATM_PIN_MSG["correct_input_pin"])
-                return True
-            elif to_int_input_user_pin != correct_pin:
-                print(ATM_PIN_MSG["mistake_input_pin"])
-                attempt_check -= 1
-                return self.auth_user_pin(
-                    input(ATM_PIN_MSG["input_pin"]), attempt_check
-                )
-
-        except ValueError:
-            print(ATM_PIN_MSG["type_err_input_pin"])
-            attempt_check -= 1
-            return self.auth_user_pin(input(ATM_PIN_MSG["input_pin"]), attempt_check)
 
 
 class BaseValidation:
@@ -300,20 +328,22 @@ class WithdrawalValidation(BaseValidation):
 
 def main() -> None:
     """メイン処理"""
+    # アカウント情報のインスタンス化
+    Account_manager = AccountManager()
 
     # 口座のインスタンス化
     bank_account = BankAccount(100)
 
     # ATM機能のインスタンス化
-    atm = ATM(bank_account)
+    atm = ATM(bank_account, Account_manager)
 
     # 残金の確認
     print(f"残金:{bank_account.my_account_balance}円")
 
     # ユーザーIDの認証
-    if atm.auth_user_id(input(ATM_ID_MSG["input_user_id"])):
+    if Account_manager.auth_user_id(input(ATM_ID_MSG["input_user_id"])):
         # ATMの操作案内
-        atm.guide_menu(int(input(GUIDE_MENU_MSG["front"])))
+        atm.guide_menu(input(GUIDE_MENU_MSG["front"]))
 
         print(f"残金:{bank_account.my_account_balance}円")
 
