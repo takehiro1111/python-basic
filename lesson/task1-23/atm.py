@@ -84,14 +84,14 @@ class ATM:
 
                 elif result_auth_user_pin is False:
                     attempt_check -= 1
-                    print(ERROR_MESSAGE["invalid_amount"])
+                    print(ATM_PIN_MSG["mistake_input_pin"])
                     return self.deposit(input(GUIDE_MENU_MSG["deposit"]), attempt_check)
 
             elif result_deposit_validation is False:
                 attempt_check -= 1
                 print(ERROR_MESSAGE["invalid_amount"])
                 return self.deposit(input(GUIDE_MENU_MSG["deposit"]), attempt_check)
-              
+
             return self.show_error_msg(deposit_validation.errors)
 
         except ValueError:
@@ -129,7 +129,7 @@ class ATM:
                     return self.bank_account.my_account_balance
                 elif result_auth_user_pin is False:
                     attempt_check -= 1
-                    print(ERROR_MESSAGE["invalid_amount"])
+                    print(ATM_PIN_MSG["mistake_input_pin"])
                     return self.withdrawal(
                         input(GUIDE_MENU_MSG["withdraw"]), attempt_check
                     )
@@ -138,7 +138,7 @@ class ATM:
                 attempt_check -= 1
                 print(ERROR_MESSAGE["invalid_amount"])
                 return self.withdrawal(input(GUIDE_MENU_MSG["withdraw"]), attempt_check)
-              
+
             return self.show_error_msg(withdraw_validation.errors)
 
         except ValueError:
