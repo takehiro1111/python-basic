@@ -12,9 +12,6 @@ from account import AccountManager, BankAccount
 from atm import ATM
 from setting import GUIDE_MENU_MSG, pretty_number
 
-# AccountManager -> 認証の判定
-# ATM -> 認証の機能の実行、エラーメッセージの出力
-
 
 def main() -> None:
     """メイン処理"""
