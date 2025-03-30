@@ -91,6 +91,8 @@ class ATM:
                 attempt_check -= 1
                 print(ERROR_MESSAGE["invalid_amount"])
                 return self.deposit(input(GUIDE_MENU_MSG["deposit"]), attempt_check)
+              
+            return self.show_error_msg(deposit_validation.errors)
 
         except ValueError:
             print(ERROR_MESSAGE["to_int"])
@@ -136,6 +138,8 @@ class ATM:
                 attempt_check -= 1
                 print(ERROR_MESSAGE["invalid_amount"])
                 return self.withdrawal(input(GUIDE_MENU_MSG["withdraw"]), attempt_check)
+              
+            return self.show_error_msg(withdraw_validation.errors)
 
         except ValueError:
             print(ERROR_MESSAGE["to_int"])
