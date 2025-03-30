@@ -3,7 +3,8 @@ ERROR_MESSAGE = {
     "not_entry": "金額が入力されていません。",
     "value_greater_than": "1以上の数字を入力してください。",
     "to_int": "数値で入力してください。",
-    "invalid_amount": "適切な金額で入力してください。"
+    "invalid_amount": "適切な金額で入力してください。",
+    "invalid_operation": "入力値が間違っています。画面に表示されている数字を入力してください。",
 }
 
 GUIDE_NUMBER = {
@@ -33,3 +34,14 @@ ATM_PIN_MSG = {
 ATM_INPUT_MSG = {
     "exceed_limit": "入力制限を超過しました。最初からやり直してください。"
 }
+
+def pretty_number(big_int: int)-> str:
+    """金額表示の際に視認性を担保するための処理。
+
+    Args:
+        big_int (int): 口座残高
+
+    Returns:
+        str: 桁区切りを実行
+    """
+    return  f"{big_int:,}"
