@@ -73,9 +73,9 @@ class ATM:
 
             # 以下の条件分岐でelseを使用しないために予め結果を取得。
             result_deposit_validation = deposit_validation.validate()
-            result_auth_user_pin = self.execute_auth_user_pin()
 
             if result_deposit_validation:
+                result_auth_user_pin = self.execute_auth_user_pin()
                 if result_auth_user_pin:
                     self.bank_account.my_account_balance += to_int_deposit_amount
                     pretty_number(to_int_deposit_amount)
@@ -119,9 +119,9 @@ class ATM:
 
             # 以下の条件分岐でelseを使用しないために予め結果を取得。
             result_withdraw_validation = withdraw_validation.validate()
-            result_auth_user_pin = self.execute_auth_user_pin()
 
             if result_withdraw_validation:
+                result_auth_user_pin = self.execute_auth_user_pin()
                 if result_auth_user_pin:
                     self.bank_account.my_account_balance -= to_int_withdraw_amount
                     pretty_number(to_int_withdraw_amount)

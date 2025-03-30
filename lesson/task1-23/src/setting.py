@@ -32,7 +32,7 @@ ATM_PIN_MSG = {
 }
 
 ATM_INPUT_MSG = {
-    "exceed_limit": "入力制限を超過しました。最初からやり直してください。"
+    "exceed_limit": "無効な入力により入力回数の上限を超過しました。最初からやり直してください。"
 }
 
 def pretty_number(big_int: int)-> str:
