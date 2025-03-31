@@ -1,4 +1,4 @@
-from setting import ERROR_MESSAGE
+from src.setting import ERROR_MESSAGE
 
 
 class BaseValidation:

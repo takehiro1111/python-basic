@@ -1,5 +1,5 @@
-from account import AccountManager, BankAccount
-from setting import (
+from src.account import AccountManager, BankAccount
+from src.setting import (
     ATM_ID_MSG,
     ATM_INPUT_MSG,
     ATM_PIN_MSG,

@@ -8,9 +8,9 @@
 # 実際にATMに必要な機能をリストアップして、ご自由に開発してみてください!
 """
 
-from account import AccountManager, BankAccount
-from atm import ATM
-from setting import GUIDE_MENU_MSG, pretty_number
+from src.account import AccountManager, BankAccount
+from src.atm import ATM
+from src.setting import GUIDE_MENU_MSG, pretty_number
 
 
 def main() -> None:
