@@ -36,7 +36,8 @@ print("\n92. ファイルの文字数カウント")
 with open(absolute_path) as f:
     data = f.read()
 
-print(len(data))
+# 空白と改行を除いた文字数
+print(len(data.replace(" ", "").replace("\n", "")))
 
 # ### **93. ファイルの置換**
 print("\n93. ファイルの置換")
@@ -52,6 +53,6 @@ with open(to_replace_path, mode="w") as f:
 with open(to_replace_path) as f:
     updated_data = f.readlines()
 
-# 改行とスペースを除去。
+# 表示の際に改行とスペースを除去。
 for line in updated_data:
     print(line.strip(" ").rstrip("\n"))
