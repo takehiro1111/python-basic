@@ -87,7 +87,7 @@ data_json_path = os.path.join(data_dir, "data.json")
 
 # dump(dict -> json)
 with open(data_json_path, mode="w") as json_file:
-    dict_to_json = json.dump(dict_data, json_file)
+    json.dump(dict_data, json_file)
 
 # load(json -> dist)
 with open(data_json_path) as json_file:
