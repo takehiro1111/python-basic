@@ -103,7 +103,7 @@ print("\n97. JSONデータの更新")
 json_to_dict["age"] = 30
 
 with open(data_json_path, mode="w") as json_file:
-    dict_to_json = json.dump(json_to_dict, json_file)
+    json.dump(json_to_dict, json_file)
 
 with open(data_json_path) as json_file:
     json_to_dict = json.load(json_file)
