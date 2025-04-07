@@ -93,7 +93,7 @@ def timer_decorator(func):
         start_time = time.time()
         result = func()
         end_time = time.time()
-        print(f"Elapsed time: {end_time - start_time:.1f} seconds")
+        print(f"Elapsed time: {end_time - start_time:.2f} seconds")
         return result
 
     return wrapper
@@ -101,7 +101,7 @@ def timer_decorator(func):
 
 @timer_decorator
 def slow_function():
-    time.sleep(2)
+    time.sleep(2.0)
     print("Function executed")
 
 
