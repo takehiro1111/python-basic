@@ -8,7 +8,7 @@ from src.setting import (
     GUIDE_NUMBER,
     pretty_number,
 )
-from validate import DepositValidation, WithdrawalValidation
+from src.validate import DepositValidation, WithdrawalsValidation
 
 
 class ATM:
@@ -41,11 +41,11 @@ class ATM:
             has_int_menu_num = int(menu_num)
             if has_int_menu_num == GUIDE_NUMBER["deposit"]:
                 return self.deposit(input(GUIDE_MENU_MSG["deposit"]))
-            elif has_int_menu_num == GUIDE_NUMBER["withdraw"]:
-                return self.withdrawal(input(GUIDE_MENU_MSG["withdraw"]))
+            elif has_int_menu_num == GUIDE_NUMBER["withdrawals"]:
+                return self.withdrawals(input(GUIDE_MENU_MSG["withdrawals"]))
             elif (
                 has_int_menu_num != GUIDE_NUMBER["deposit"]
-                or has_int_menu_num != GUIDE_NUMBER["withdraw"]
+                or has_int_menu_num != GUIDE_NUMBER["withdrawals"]
             ):
                 print(ERROR_MESSAGE["invalid_operation"])
                 attempt_check -= 1
@@ -99,10 +99,10 @@ class ATM:
             attempt_check -= 1
             self.deposit(input(GUIDE_MENU_MSG["deposit"]), attempt_check)
 
-    def withdrawal(self, withdrawal_amount: str, attempt_check=3) -> int | None:
+    def withdrawals(self, withdrawals_amount: str, attempt_check=3) -> int | None:
         """出金
         Args:
-            withdrawal_amount (int): 出金額
+            withdrawals_amount (int): 出金額
         Returns:
             int: 残高
             str: 残高不足のメッセージ
@@ -112,39 +112,41 @@ class ATM:
                 print(ATM_INPUT_MSG["exceed_limit"])
                 return
 
-            to_int_withdraw_amount = int(withdrawal_amount)
-            withdraw_validation = WithdrawalValidation(
-                self.bank_account.my_account_balance, to_int_withdraw_amount
+            to_int_withdrawals_amount = int(withdrawals_amount)
+            withdrawals_validation = WithdrawalsValidation(
+                self.bank_account.my_account_balance, to_int_withdrawals_amount
             )
 
             # 以下の条件分岐でelseを使用しないために予め結果を取得。
-            result_withdraw_validation = withdraw_validation.validate()
+            result_withdrawals_validation = withdrawals_validation.validate()
 
-            if result_withdraw_validation:
+            if result_withdrawals_validation:
                 result_auth_user_pin = self.execute_auth_user_pin()
                 if result_auth_user_pin:
-                    self.bank_account.my_account_balance -= to_int_withdraw_amount
-                    pretty_number(to_int_withdraw_amount)
-                    print(f"{to_int_withdraw_amount:,}円を引き出しました。")
+                    self.bank_account.my_account_balance -= to_int_withdrawals_amount
+                    pretty_number(to_int_withdrawals_amount)
+                    print(f"{to_int_withdrawals_amount:,}円を引き出しました。")
                     return self.bank_account.my_account_balance
                 elif result_auth_user_pin is False:
                     attempt_check -= 1
                     print(ATM_PIN_MSG["mistake_input_pin"])
-                    return self.withdrawal(
-                        input(GUIDE_MENU_MSG["withdraw"]), attempt_check
+                    return self.withdrawals(
+                        input(GUIDE_MENU_MSG["withdrawals"]), attempt_check
                     )
 
-            elif result_withdraw_validation is False:
+            elif result_withdrawals_validation is False:
                 attempt_check -= 1
                 print(ERROR_MESSAGE["invalid_amount"])
-                return self.withdrawal(input(GUIDE_MENU_MSG["withdraw"]), attempt_check)
+                return self.withdrawals(
+                    input(GUIDE_MENU_MSG["withdrawals"]), attempt_check
+                )
 
-            return self.show_error_msg(withdraw_validation.errors)
+            return self.show_error_msg(withdrawals_validation.errors)
 
         except ValueError:
             print(ERROR_MESSAGE["to_int"])
             attempt_check -= 1
-            return self.withdrawal(input(GUIDE_MENU_MSG["withdraw"]), attempt_check)
+            return self.withdrawals(input(GUIDE_MENU_MSG["withdrawals"]), attempt_check)
 
     @staticmethod
     def show_error_msg(error_msg: list[str]) -> None:

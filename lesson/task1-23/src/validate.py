@@ -1,3 +1,6 @@
+# The above code defines two classes, `DepositValidation` and `WithdrawalValidation`, that perform
+# validation for deposit and withdrawal transactions, respectively, based on the provided amount and
+# balance.
 from src.setting import ERROR_MESSAGE
 
 
@@ -47,7 +50,7 @@ class DepositValidation(BaseValidation):
         return self.is_valid
 
 
-class WithdrawalValidation(BaseValidation):
+class WithdrawalsValidation(BaseValidation):
     """validate
     引き出し時のvalidate
 
@@ -71,11 +74,11 @@ class WithdrawalValidation(BaseValidation):
         Returns:
             bool: 金額が絶対値であればTrueを返す。
         """
-        if self.balance < self.amount:
-            self.errors = ERROR_MESSAGE["insufficient_balance"]
+
+        if self.amount is None:
+            self.errors = ERROR_MESSAGE["not_entry"]
         elif self.amount < 1:
             self.errors = ERROR_MESSAGE["value_greater_than"]
-        elif self.amount is None:
-            self.errors = ERROR_MESSAGE["not_entry"]
-
+        elif self.balance < self.amount:
+            self.errors = ERROR_MESSAGE["insufficient_balance"]
         return self.is_valid

@@ -9,13 +9,13 @@ ERROR_MESSAGE = {
 
 GUIDE_NUMBER = {
     "deposit": 1,
-    "withdraw": 2,
+    "withdrawals": 2,
 }
 
 GUIDE_MENU_MSG = {
-    "front": f"メニュー(入金:{GUIDE_NUMBER["deposit"]} / 出金:{GUIDE_NUMBER["withdraw"]})",
+    "front": f"メニュー(入金:{GUIDE_NUMBER["deposit"]} / 出金:{GUIDE_NUMBER["withdrawals"]})",
     "deposit": "入金額を入力してください。",
-    "withdraw": "出金額を入力してください。",
+    "withdrawals": "出金額を入力してください。",
 }
 
 ATM_ID_MSG = {
