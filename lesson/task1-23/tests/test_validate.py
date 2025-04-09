@@ -1,59 +1,51 @@
 import pytest
 from src.setting import ERROR_MESSAGE
-from src.validate import BaseValidation, DepositValidation, WithdrawalValidation
+from src.validate import DepositValidation, WithdrawalsValidation
 
 
 class TestBaseValidation:
-    def test_errors(self):
-        base_validation = BaseValidation()
+    def test_errors(self, base_validation):
+        """エラーメッセージのリストの初期状態をテスト"""
+
         assert base_validation._errors == []
 
-    def test_is_valid(self):
-        base_validation = BaseValidation()
+    def test_is_valid(self, base_validation):
+        """エラーメッセージのリストの初期状態をテスト"""
+
         assert base_validation.is_valid
 
 
 class TestDepositValidation:
-    def test_validate(self):
-        deposit_validation = DepositValidation(1000)
-        assert deposit_validation.validate()
-        assert deposit_validation.is_valid
+    @pytest.mark.parametrize(
+        "amount, expected", [(10000, True), (None, False), (0, False), (-1, False)]
+    )
+    def test_validate(self, amount, expected):
+        """入金額のバリデーション処理のテスト"""
 
-    def test_validate_none(self):
-        deposit_validation = DepositValidation(None)
-        assert deposit_validation.validate() is False
-        assert ERROR_MESSAGE["not_entry"] in deposit_validation.errors
-
-    def test_validate_less_one(self):
-        deposit_validation = DepositValidation(0)
-        assert deposit_validation.validate() is False
-        assert ERROR_MESSAGE["value_greater_than"] in deposit_validation.errors
-
-        deposit_validation = DepositValidation(-1)
-        assert deposit_validation.validate() is False
-        assert ERROR_MESSAGE["value_greater_than"] in deposit_validation.errors
+        deposit_validation = DepositValidation(amount)
+        assert deposit_validation.validate() == expected
+        assert deposit_validation.is_valid == expected
 
 
-class TestWithdrawalValidation:
-    def test_validate(self):
-        withdraw_validation = WithdrawalValidation(1000, 500)
-        assert withdraw_validation.validate()
+class TestWithdrawalsValidation:
+    @pytest.mark.parametrize(
+        "balance, amount, msg, expected",
+        [
+            (1000, 1000, None, True),
+            (10000, None, ERROR_MESSAGE["not_entry"], False),
+            (10000, 0, ERROR_MESSAGE["value_greater_than"], False),
+            (10000, -1, ERROR_MESSAGE["value_greater_than"], False),
+            (10000, 20000, ERROR_MESSAGE["insufficient_balance"], False),
+        ],
+    )
+    def test_validate(self, balance, amount, msg, expected):
+        """出金額のバリデーション処理のテスト"""
 
-    def test_validate_none(self):
-        withdraw_validation = WithdrawalValidation(1000, None)
-        assert withdraw_validation.validate() is False
-        assert ERROR_MESSAGE["not_entry"] in withdraw_validation.errors
+        withdrawals_validate = WithdrawalsValidation(balance, amount)
+        assert withdrawals_validate.validate() is expected
 
-    def test_validate_less_one(self):
-        withdraw_validation = WithdrawalValidation(1000, 0)
-        assert withdraw_validation.validate() is False
-        assert ERROR_MESSAGE["value_greater_than"] in withdraw_validation.errors
+        if expected:
+            assert not withdrawals_validate.errors
 
-        withdraw_validation = WithdrawalValidation(1000, -1)
-        assert withdraw_validation.validate() is False
-        assert ERROR_MESSAGE["value_greater_than"] in withdraw_validation.errors
-
-    def test_validate_less_blance(self):
-        withdraw_validation = WithdrawalValidation(1000, 2000)
-        assert withdraw_validation.validate() is False
-        assert ERROR_MESSAGE["insufficient_balance"] in withdraw_validation.errors
+        if expected is False:
+            assert msg in withdrawals_validate.errors

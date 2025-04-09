@@ -1,60 +1,70 @@
 import io
 
 import pytest
-from src.account import AccountManager, BankAccount
-from src.atm import ATM
 
 
 class TestATM:
-    @pytest.fixture
-    def atm(self):
-        return ATM(BankAccount(10000), AccountManager())
-
-    @pytest.fixture
-    def account_manager(self):
-        return AccountManager()
-
-    # メニュー選択
-    def test_guide_menu(self, atm, monkeypatch):
+    def test_guide_menu(self, authenticated_atm, monkeypatch):
         """メニュー選択のテスト"""
-        # 暗証番号認証を成功させるためのモック
-        monkeypatch.setattr(atm, "execute_auth_user_pin", lambda attempt_check=3: True)
 
-        monkeypatch.setattr("builtins.input", lambda _: "1")
-        monkeypatch.setattr("builtins.input", lambda _: "2")
-        monkeypatch.setattr("builtins.input", lambda _: "3")
+        monkeypatch.setattr("builtins.input", lambda _: "3000")
+        assert authenticated_atm.guide_menu("1")
 
-        assert atm.guide_menu("1")
-        assert atm.guide_menu("2")
-        assert atm.guide_menu("3") is None
+        monkeypatch.setattr("builtins.input", lambda _: "1000")
+        assert authenticated_atm.guide_menu("2")
 
-    # 入金処理
-    def test_deposit(self, monkeypatch):
-        monkeypatch.setattr("builtins.input", lambda _: "1")
+        assert authenticated_atm.guide_menu("3") is None
+        assert authenticated_atm.guide_menu("invalid") is None
 
-    # # 出金処理
-    # def test_withdraw(self):
+    @pytest.mark.parametrize(
+        "amount, expected",
+        [("1000", 11000), ("test-str", None), ("0", None), ("-1", None)],
+    )
+    def test_deposit(self, authenticated_atm, monkeypatch, amount, expected):
+        """入金処理のテスト"""
 
-    # エラーメッセージの取得
+        monkeypatch.setattr("builtins.input", lambda _: amount)
+
+        result = authenticated_atm.deposit(amount)
+        assert result == expected
+
+    @pytest.mark.parametrize(
+        "amount, expected",
+        [("10000", 0), ("200000", None), ("test-str", None), ("0", None), ("-1", None)],
+    )
+    def test_withdrawals(self, authenticated_atm, monkeypatch, amount, expected):
+        """出金処理のテスト"""
+
+        monkeypatch.setattr("builtins.input", lambda _: amount)
+
+        result = authenticated_atm.withdrawals(amount)
+        assert result == expected
+
     def test_show_error_msg(self, atm):
+        """エラーメッセージ取得のテスト"""
+
         err_msg = atm.show_error_msg(["test-error"])
         assert err_msg is None
 
-    # ユーザーIDの認証
     def test_execute_auth_user_id_true(self, atm, monkeypatch):
+        """ユーザーIDの認証テスト(成功する場合)"""
+
         monkeypatch.setattr("sys.stdin", io.StringIO("takehiro1111\nMichael"))
 
         assert atm.execute_auth_user_id()
 
     def test_execute_auth_user_id_false(self, atm, monkeypatch):
+        """ユーザーIDの認証テスト(失敗する場合)"""
+
         monkeypatch.setattr(
             "sys.stdin", io.StringIO("fail-test\nfail-test2\nfail-test3\nfail-test4")
         )
 
         assert atm.execute_auth_user_id() is False
 
-    # 暗証番号の認証
     def test_execute_auth_user_pin_true(self, atm, monkeypatch):
+        """暗証番号の認証のテスト(成功する場合)"""
+
         monkeypatch.setattr(
             "sys.stdin", io.StringIO(f"takehiro1111\n1234\nMichael\n5678")
         )
@@ -63,6 +73,8 @@ class TestATM:
         assert atm.execute_auth_user_pin()
 
     def test_execute_auth_user_pin_false(self, atm, monkeypatch):
+        """暗証番号の認証のテスト(失敗する場合)"""
+
         monkeypatch.setattr(
             "sys.stdin",
             io.StringIO(
