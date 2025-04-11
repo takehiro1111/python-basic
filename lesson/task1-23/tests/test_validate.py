@@ -7,12 +7,12 @@ class TestBaseValidation:
     def test_errors(self, base_validation):
         """エラーメッセージのリストの初期状態をテスト"""
 
-        assert base_validation._errors == []
+        assert base_validation._errors == [], f"test_errors should be {[]}"
 
     def test_is_valid(self, base_validation):
         """エラーメッセージのリストの初期状態をテスト"""
 
-        assert base_validation.is_valid
+        assert base_validation.is_valid is True, f"test_is_valid should be {True}"
 
 
 class TestDepositValidation:
@@ -23,8 +23,12 @@ class TestDepositValidation:
         """入金額のバリデーション処理のテスト"""
 
         deposit_validation = DepositValidation(amount)
-        assert deposit_validation.validate() == expected
-        assert deposit_validation.is_valid == expected
+        assert (
+            deposit_validation.validate() == expected
+        ), f"TestDepositValidation: test_validate validate() should be amount:{amount} / expected:{expected} "
+        assert (
+            deposit_validation.is_valid == expected
+        ), f"TestDepositValidation: test_validate is_valid should be amount:{amount} / expected:{expected} "
 
 
 class TestWithdrawalsValidation:
@@ -42,10 +46,16 @@ class TestWithdrawalsValidation:
         """出金額のバリデーション処理のテスト"""
 
         withdrawals_validate = WithdrawalsValidation(balance, amount)
-        assert withdrawals_validate.validate() is expected
+        assert (
+            withdrawals_validate.validate() == expected
+        ), f"TestDepositValidation: test_validate validate() should be amount:{amount} / expected:{expected} "
 
         if expected:
-            assert not withdrawals_validate.errors
+            assert (
+                withdrawals_validate.errors == []
+            ), f"TestDepositValidation: if expected should be {[]} "
 
         if expected is False:
-            assert msg in withdrawals_validate.errors
+            assert (
+                msg in withdrawals_validate.errors == [msg]
+            ), f"TestDepositValidation: if expected  is False should be {[msg]} "
