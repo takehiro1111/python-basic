@@ -27,6 +27,7 @@
 """
 
 import random
+import sys
 
 from csv_manage import CSVManager
 from prettytable import PrettyTable
@@ -73,7 +74,8 @@ class ProductManager:
                 return self.choice_process()
             case 5:
                 print("商品データに対する処理を終了します。")
-                return "処理を終了。"
+                sys.exit()
+        return
 
     #################################################
     # 商品データの表示
