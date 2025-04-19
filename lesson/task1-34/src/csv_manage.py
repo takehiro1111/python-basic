@@ -17,9 +17,6 @@ import os
 from setting import DATETIME_STR, FIELDS
 
 
-# ディレクトリとファイルの作成
-## 商品が登録された時点でCSVファイルに書き込み処理を行い、内容を読み込んで表示する。
-### 商品ごとにファイルを作成する。
 class CSVManager:
     def __init__(self):
         self.field_names: list[str] = FIELDS

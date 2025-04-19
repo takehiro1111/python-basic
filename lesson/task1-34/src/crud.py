@@ -36,7 +36,7 @@ from setting import FIELDS
 class ProductManager:
     def __init__(self, csv_manager: CSVManager):
         self.csv_manager = csv_manager
-        self._product_data = []  # プロセス上で管理しているデータの保持
+        self._product_data = []
         self._product_id = 0
 
     #################################################
@@ -57,9 +57,6 @@ class ProductManager:
         except TypeError:
             print("数字を入力してください。")
             self._input_menu_num(attempt - 1)
-
-    # def __init__(self):
-    #   super().__init__(self.csv_manager, self._product_data, self._product_id)
 
     def choice_process(self):
         menu_num: int = self._input_menu_num()
