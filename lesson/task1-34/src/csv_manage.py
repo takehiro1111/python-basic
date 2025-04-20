@@ -42,12 +42,14 @@ class CSVManager:
 
             csv_writer.writerow(field_names)
 
-            row = [
-                element for elements in product_data for element in elements.values()
+            rows = [
+                [elements["ID"], elements["商品名"], elements["JANコード"]]
+                for elements in product_data
             ]
+            print("rows", rows)
 
-            csv_writer.writerow(row)
+            csv_writer.writerows(rows)
 
-            print("CSVファイルを作成しました。再度ご希望の処理を選択してください。")
+        print("CSVファイルを作成しました。再度ご希望の処理を選択してください。")
 
-            return True
+        return True

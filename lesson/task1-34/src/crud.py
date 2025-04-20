@@ -37,7 +37,7 @@ from setting import FIELDS
 class ProductManager:
     def __init__(self, csv_manager: CSVManager):
         self.csv_manager = csv_manager
-        self._product_data = []
+        self.product_list = []
         self._product_id = 0
 
     #################################################
@@ -70,7 +70,7 @@ class ProductManager:
             case 3:
                 return self.delete_product_data()
             case 4:
-                self.csv_manager.create_csv_file(self._product_data)
+                self.csv_manager.create_csv_file(self.product_list)
                 return self.choice_process()
             case 5:
                 print("商品データに対する処理を終了します。")
@@ -86,7 +86,7 @@ class ProductManager:
         field_name: list[str] = FIELDS
         table = PrettyTable(field_names=field_name)
 
-        for product_data in self._product_data:
+        for product_data in self.product_list:
             table.add_row(
                 [product_data["ID"], product_data["商品名"], product_data["JANコード"]]
             )
@@ -97,7 +97,7 @@ class ProductManager:
     @get_product_data.setter
     def get_product_data(self, value):
         if value:
-            self._product_data.append(value)
+            self.product_list.append(value)
 
     #################################################
     # 商品データの登録
@@ -124,12 +124,19 @@ class ProductManager:
 
         return formatted_id
 
-    def _template_product_data(self, id, name):
-        random_int = random.randint(100000000, 999999999)
+    def _generate_jan_code(self):
+        random_int = str(random.randint(100000000, 999999999))
+        product_id = str(self._format_product_id())
+        jan_code = random_int + product_id
+
+        return int(jan_code)
+
+    def _template_product_data(self, id, name, jan_code):
+
         product_data = {
             "ID": id,
             "商品名": name,
-            "JANコード": random_int,
+            "JANコード": jan_code,
         }
         return product_data
 
@@ -138,8 +145,11 @@ class ProductManager:
         product_id = self._format_product_id()
 
         input_product_name = self._input_product_name()
+        jan_code = self._generate_jan_code()
 
-        product_data = self._template_product_data(product_id, input_product_name)
+        product_data = self._template_product_data(
+            product_id, input_product_name, jan_code
+        )
         self.get_product_data = product_data
         print(self.get_product_data)
 
@@ -164,9 +174,9 @@ class ProductManager:
     def delete_product_data(self):
         del_product_id = self._get_del_product_id()
 
-        for i, element in enumerate(self._product_data):
+        for i, element in enumerate(self.product_list):
             if del_product_id == element["ID"]:
-                self._product_data.pop(i)
+                self.product_list.pop(i)
                 print(f"ID:{del_product_id}の商品データを削除しました。")
                 break
 
