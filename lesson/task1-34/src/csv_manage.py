@@ -16,6 +16,7 @@ import os
 import random
 from datetime import datetime
 
+from logger import logger
 from setting import FIELDS
 
 
@@ -60,15 +61,14 @@ class CSVManager:
                     [elements["ID"], elements["商品名"], elements["JANコード"]]
                     for elements in product_data
                 ]
-                print("rows", rows)
 
                 csv_writer.writerows(rows)
 
-                print(f"CSVファイルを作成しました。再度ご希望の処理を選択してください。")
+                logger.info(f"CSVファイルを作成しました。再度ご希望の処理を選択してください。")
 
                 return True
 
-        print("商品データが入力されていないためファイルを生成していません。")
+        logger.warning("商品データが入力されていないためファイルを生成していません。")
 
 class ImportCSVManager(CSVManager):
     def __init__(self):
@@ -91,25 +91,30 @@ class ImportCSVManager(CSVManager):
 
     def create_import_csv_file(self, product_data, by_applications):
         csv_file_path = self._get_import_csv_file_path()
-        if product_data:
-            with open(csv_file_path, mode="w", newline="", encoding="utf-8") as csv_file:
-                field_names = self.field_names
-                csv_writer = csv.writer(csv_file)
-                csv_writer.writerow(field_names)
 
-                rows = [
-                    [elements["ID"], elements["商品名"], elements["JANコード"]]
-                    for elements in product_data
-                ]
-                print("rows", rows)
+        try:
+            if product_data:
+                with open(csv_file_path, mode="w", newline="", encoding="utf-8") as csv_file:
+                    field_names = self.field_names
+                    csv_writer = csv.writer(csv_file)
+                    csv_writer.writerow(field_names)
 
-                csv_writer.writerows(rows)
+                    rows = [
+                        [elements["ID"], elements["商品名"], elements["JANコード"]]
+                        for elements in product_data
+                    ]
 
-                print(f"{by_applications}のCSVファイルを作成しました。再度ご希望の処理を選択してください。")
+                    csv_writer.writerows(rows)
 
-                return True
+                    logger.info(f"{by_applications}のCSVファイルを作成しました。再度ご希望の処理を選択してください。")
 
-        print("商品データが入力されていないためファイルを生成していません。")
+                    return True
+        except PermissionError as e:
+            logger.warning(f"ファイルに対する権限不足でした。:{e}")
+        except OSError as e:
+            logger.error(f"OS関連の一般的なエラーです。:{e}")
+
+        logger.warning("商品データが入力されていないためファイルを生成していません。")
 
     def _get_complete_csv_file_path(self) -> str:
         has_datetime_now = self._create_time_stamp()
@@ -132,10 +137,9 @@ class ImportCSVManager(CSVManager):
 
                 # 2行目以降は処理する。
                 for row in reader:
-                    print(row)
                     rows.append(row)
 
-        return rows # [['001', 'test-1', '851726392001'], ['002', 'test-2', '623129000002']]
+        return rows
 
 
     def _format_product_id(self):
@@ -152,36 +156,50 @@ class ImportCSVManager(CSVManager):
         return int(jan_code) + counter
 
     def create_complete_csv_file(self):
-        import_file_rows = self._read_import_csv_file()
+        try:
+            import_file_rows = self._read_import_csv_file()
 
-        complete_file_list = [file for file in os.listdir(self.complete_dir) if os.path.isfile(os.path.join(self.complete_dir, file))]
+            # import側に読み込むデータが存在しない場合は処理を終了する。
+            if len(import_file_rows) == 0:
+                logger.warning("インポート対象ファイルが存在しません。")
+                return
 
-        # import_items.csvのファイル名が既に存在する場合はタイムスタンプを含むファイル名にする。
-        complete_csv_file_path = self._get_complete_csv_file_path() if "import_items.csv" in complete_file_list else os.path.join(self.complete_dir, "import_items.csv")
+            complete_file_list = [file for file in os.listdir(self.complete_dir) if os.path.isfile(os.path.join(self.complete_dir, file))]
 
-        # 商品名が空でない場合はデータを処理する。
-        with open(complete_csv_file_path, mode="w", newline="", encoding="utf-8") as csv_file:
-            csv_writer = csv.writer(csv_file)
+            # import_items.csvのファイル名が既に存在する場合はタイムスタンプを含むファイル名にする。
+            complete_csv_file_path = self._get_complete_csv_file_path() if "import_items.csv" in complete_file_list else os.path.join(self.complete_dir, "import_items.csv")
 
-            has_unique_product_name = set()
-            except_duplicate_data = []
-            jan_code_counter = 0
-            for row in import_file_rows:
-                # 商品名が空の場合 or 商品名が重複する場合はスキップ
-                if len(row[1]) == 0:
-                    continue
+            # 商品名が空でない場合はデータを処理する。
+            with open(complete_csv_file_path, mode="w", newline="", encoding="utf-8") as csv_file:
+                csv_writer = csv.writer(csv_file)
 
-                # 商品名の重複を排除したいため。
-                if row[1] not in has_unique_product_name:
-                    # JANコードをcomplete用に差し替え。
-                    new_jan_code = self._generate_jan_code(jan_code_counter)
-                    row[2] = new_jan_code
-                    jan_code_counter += 1
+                has_unique_product_name = set()
+                except_duplicate_data = []
+                jan_code_counter = 0
+                for row in import_file_rows:
+                    # 商品名が空の場合はスキップ
+                    if len(row[1]) == 0:
+                        continue
 
-                    except_duplicate_data.append(row)
-                    has_unique_product_name.add(row[1])
+                    # 商品名の重複を排除したいため。
+                    if row[1] not in has_unique_product_name:
+                        # JANコードをcomplete用に差し替え。
+                        new_jan_code = self._generate_jan_code(jan_code_counter)
+                        row[2] = new_jan_code
+                        jan_code_counter += 1
 
-            has_list_rows = except_duplicate_data
-            csv_writer.writerows(has_list_rows)
+                        except_duplicate_data.append(row)
+                        has_unique_product_name.add(row[1])
 
-        print(f"登録完了しました。\nファイル名:{complete_csv_file_path.split("/")[-1]} / 追加件数:{len(except_duplicate_data)}件")
+                has_list_rows = except_duplicate_data
+                csv_writer.writerows(has_list_rows)
+
+        except FileNotFoundError as e:
+            logger.warning(f"ファイルが見つかりませんでした。:{e}")
+        except PermissionError as e:
+            logger.warning(f"ファイルに対する権限不足でした。:{e}")
+        except OSError as e:
+            logger.error(f"OS関連の一般的なエラーです。:{e}")
+
+        logger.info("complete ディレクトリに移動しました。")
+        logger.info(f"ファイル名:{complete_csv_file_path.split("/")[-1]} / 追加件数:{len(except_duplicate_data)}件")

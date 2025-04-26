@@ -31,7 +31,7 @@ import sys
 
 from csv_manage import CSVManager, ImportCSVManager
 from prettytable import PrettyTable
-from setting import FIELDS
+from setting import FIELDS, MENU_INPUT_MSG
 
 
 class ProductManager:
@@ -50,11 +50,7 @@ class ProductManager:
             return
 
         try:
-            menu_num = int(
-                input(
-                    "ご希望の処理を番号で入力してください。\n(1:既存商品データの表示 / 2:商品データの新規登録 / 3:商品データの削除 / 4.CSVファイルの生成 / 5.終了 )"
-                )
-            )
+            menu_num = int(input(MENU_INPUT_MSG))
             return menu_num
         except TypeError:
             print("数字を入力してください。")
