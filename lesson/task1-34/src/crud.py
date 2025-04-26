@@ -29,14 +29,15 @@
 import random
 import sys
 
-from csv_manage import CSVManager
+from csv_manage import CSVManager, ImportCSVManager
 from prettytable import PrettyTable
 from setting import FIELDS
 
 
 class ProductManager:
-    def __init__(self, csv_manager: CSVManager):
+    def __init__(self, csv_manager: CSVManager, import_csv_manager: ImportCSVManager):
         self.csv_manager = csv_manager
+        self.import_csv_manager = import_csv_manager
         self.product_list = []
         self._product_id = 0
 
@@ -73,6 +74,12 @@ class ProductManager:
                 self.csv_manager.create_csv_file(self.product_list)
                 return self.choice_process()
             case 5:
+                self.import_csv_manager.create_import_csv_file(
+                    self.product_list, "import"
+                )
+                self.import_csv_manager.create_complete_csv_file()
+                return self.choice_process()
+            case 6:
                 print("商品データに対する処理を終了します。")
                 sys.exit()
         return

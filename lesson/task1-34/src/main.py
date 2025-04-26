@@ -13,12 +13,13 @@
 # 5. **終了**
 # ---
 from crud import ProductManager
-from csv_manage import CSVManager
+from csv_manage import CSVManager, ImportCSVManager
 
 
 def main():
     csv_manager = CSVManager()
-    product_manager = ProductManager(csv_manager)
+    import_csv_manager = ImportCSVManager()
+    product_manager = ProductManager(csv_manager, import_csv_manager)
     product_manager.choice_process()
 
     return
