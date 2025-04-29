@@ -70,10 +70,16 @@ class ProductManager:
                 self.csv_manager.create_csv_file(self.product_list)
                 return self.choice_process()
             case 5:
-                self.import_csv_manager.create_import_csv_file(
-                    self.product_list, "import"
+                (
+                    result_create_import_file,
+                    csv_file_path_import,
+                ) = self.import_csv_manager.create_import_csv_file(self.product_list)
+                result_move_to_complete = (
+                    self.import_csv_manager.move_csv_file_import_to_complete(
+                        result_create_import_file, csv_file_path_import
+                    )
                 )
-                self.import_csv_manager.create_complete_csv_file()
+                self.import_csv_manager.delete_import_file(result_move_to_complete)
                 return self.choice_process()
             case 6:
                 print("商品データに対する処理を終了します。")
