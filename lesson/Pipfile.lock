@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "fb4ae039ad04a563578c142adaaa42f6137009987fc8446197e99175e34accbc"
+            "sha256": "7d2bd68cd3e4538d69c26a908bea14323087c0d31936bb1c2236172dcccd81c3"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -19,20 +19,20 @@
     "default": {
         "boto3": {
             "hashes": [
-                "sha256:2cacecd689cb51d81fbf54f84b64d0e6e922fbc18ee513c568b9f61caf4221e0",
-                "sha256:e115dc87d5975d32dfa0ebaf19c39e360665317a350004fa94b03200fe853f2e"
+                "sha256:64301d39adecc154e3e595eaf0d4f28998ef0a5551f1d033aeac51a9e1a688e5",
+                "sha256:daa776ba1251a7458c9d6c7627873d0c2460c8e8272d35759065580e9193700a"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.9'",
-            "version": "==1.40.17"
+            "version": "==1.40.18"
         },
         "botocore": {
             "hashes": [
-                "sha256:603951935c1a741ae70236bf15725c5293074f28503e7029ad0e24ece476a342",
-                "sha256:769cd04a6a612f2d48b5f456c676fd81733fab682870952f7e2887260ea6a2bc"
+                "sha256:57025c46ca00cf8cec25de07a759521bfbfb3036a0f69b272654a354615dc45f",
+                "sha256:afd69bdadd8c55cc89d69de0799829e555193a352d87867f746e19020271cc0f"
             ],
             "markers": "python_version >= '3.9'",
-            "version": "==1.40.17"
+            "version": "==1.40.18"
         },
         "certifi": {
             "hashes": [
@@ -426,11 +426,11 @@
         },
         "platformdirs": {
             "hashes": [
-                "sha256:3d512d96e16bcb959a814c9f348431070822a6496326a4be0911c40b5a74c2bc",
-                "sha256:ff7059bb7eb1179e2685604f4aaf157cfd9535242bd23742eadc3c13542139b4"
+                "sha256:abd01743f24e5287cd7a5db3752faf1a2d65353f38ec26d98e25a6db65958c85",
+                "sha256:ca753cf4d81dc309bc67b0ea38fd15dc97bc30ce419a7f58d13eb3bf14c4febf"
             ],
             "markers": "python_version >= '3.9'",
-            "version": "==4.3.8"
+            "version": "==4.4.0"
         },
         "pluggy": {
             "hashes": [
