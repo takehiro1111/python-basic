@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "948bacf9ab897000989d642e696dbd14de16f0796a279c58088207c26930392a"
+            "sha256": "9111432b09e2815b41f8b1cf308214baecee67faa097e6b25f91fc61d21aa88d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -19,20 +19,20 @@
     "default": {
         "boto3": {
             "hashes": [
-                "sha256:16f4cf97f8dd8e0aae015f4dc66219bd7716a91a40d1e2daa0dafa241a4761c5",
-                "sha256:8df6df755727be40ad9e309cfda07f9a12c147e17b639430c55d4e4feee8a167"
+                "sha256:73bf7f63152406404c0359c013a692e884b98a3b297160058a38f00ef19e375b",
+                "sha256:d5c454bb23655b052073c8dc6703dda5360825b72b1691822ae7709050b96390"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.9'",
-            "version": "==1.40.76"
+            "version": "==1.41.0"
         },
         "botocore": {
             "hashes": [
-                "sha256:2b16024d68b29b973005adfb5039adfe9099ebe772d40a90ca89f2e165c495dc",
-                "sha256:fe425d386e48ac64c81cbb4a7181688d813df2e2b4c78b95ebe833c9e868c6f4"
+                "sha256:555afbf86a644bfa4ebd7bd98d717b53b792e6bbb2c49f2b308fb06964cf1655",
+                "sha256:a5018d6268eee358dfc5d86e596c3062b4e225690acaf946f54c00063b804bf8"
             ],
             "markers": "python_version >= '3.9'",
-            "version": "==1.40.76"
+            "version": "==1.41.0"
         },
         "certifi": {
             "hashes": [
@@ -44,11 +44,11 @@
         },
         "cfgv": {
             "hashes": [
-                "sha256:b7265b1f29fd3316bfcd2b330d63d024f2bfd8bcb8b0272f8e19a504856c48f9",
-                "sha256:e52591d4c5f5dead8e0f673fb16db7949d2cfb3f7da4582893288f0ded8fe560"
+                "sha256:a8dc6b26ad22ff227d2634a65cb388215ce6cc96bbcc5cfde7641ae87e8dacc0",
+                "sha256:d5b1034354820651caa73ede66a6294d6e95c1b00acc5e9b098e917404669132"
             ],
-            "markers": "python_version >= '3.8'",
-            "version": "==3.4.0"
+            "markers": "python_version >= '3.10'",
+            "version": "==3.5.0"
         },
         "charset-normalizer": {
             "hashes": [
