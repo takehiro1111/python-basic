@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "5b3085763d204b9b190931d611c0711964a4d0284badacb205d4271855159e52"
+            "sha256": "d8d98fe65d931716d1175ff54fb8f890aff0c879fa6fe997eb8e85ed1a632166"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -19,20 +19,20 @@
     "default": {
         "boto3": {
             "hashes": [
-                "sha256:5933696a28bf8eb62fc54e4de5583f78a0efef59c8164ee1850436aa22f53aa7",
-                "sha256:c55b8b303c64931272536813a476f130b90ea7041d7b79c154d89cf1c18256b4"
+                "sha256:4a642dddd4fbe98873fed3dee76f261efcd3f70808625399d1708da95b4838c5",
+                "sha256:d1ad862d9e4b885af55f3b4c7ab8268b95e3e38a98cf66f50693f7d7603a726e"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.9'",
-            "version": "==1.42.19"
+            "version": "==1.42.20"
         },
         "botocore": {
             "hashes": [
-                "sha256:30c276e0a96d822826d74e961089b9af16b274ac7ddcf7dcf6440bc90d856d88",
-                "sha256:8d38f30de983720303e95951380a2c9ac515159636ee6b5ba4227d65f14551a4"
+                "sha256:305e5b1ee237bc4d0e66643fb0961f8093667c81afd668737984a99702a9f08b",
+                "sha256:5cea428aba9ccc9f6d496e66c5acbd07eb98e95bacc85ddc8153a01caf2cd64a"
             ],
             "markers": "python_version >= '3.9'",
-            "version": "==1.42.19"
+            "version": "==1.42.20"
         },
         "certifi": {
             "hashes": [
@@ -279,11 +279,11 @@
         },
         "filelock": {
             "hashes": [
-                "sha256:15d9e9a67306188a44baa72f569d2bfd803076269365fdea0934385da4dc361a",
-                "sha256:b8360948b351b80f420878d8516519a2204b07aefcdcfd24912a5d33127f188c"
+                "sha256:a2241ff4ddde2a7cebddf78e39832509cb045d18ec1a09d7248d6bfc6bfbbe64",
+                "sha256:fbba7237d6ea277175a32c54bb71ef814a8546d8601269e1bfc388de333974e8"
             ],
             "markers": "python_version >= '3.10'",
-            "version": "==3.20.1"
+            "version": "==3.20.2"
         },
         "identify": {
             "hashes": [
