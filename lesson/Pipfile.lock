@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "311aa31eec43b9ff32d00e3c0d106576392d63fc2391d8e0b3d72a3b84d3d278"
+            "sha256": "28c6dd34d291cd3d604fda1035776362bff2d412698838bc527e0323e425ff54"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -19,20 +19,20 @@
     "default": {
         "boto3": {
             "hashes": [
-                "sha256:796e859cfb5e93c55276ce746f8020f691eda6b68a0ec4ce4f6fd07a1cca6859",
-                "sha256:be951cc22769fbcda73fac523b031ee38db45c3ae2b0d828c76b8f6e8e683073"
+                "sha256:7c7777862ffc898f05efa566032bbabfe226dbb810e35ec11125817f128bc5c5",
+                "sha256:fb9fe51849ef2a78198d582756fc06f14f7de27f73e0fa90275d6aa4171eb4d0"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.10'",
-            "version": "==1.43.2"
+            "version": "==1.43.3"
         },
         "botocore": {
             "hashes": [
-                "sha256:7b2ec87b6d0720bff920451ce930e71c2a99cdea48d0eaa66ccf0b21ea747e03",
-                "sha256:b823454d751a1c24bb403b5b07ab65007689654abb21787df923684e0743976c"
+                "sha256:eac6da0fffccf87888ebf4d89f0b2378218a707efa748cd955b838995e944695",
+                "sha256:ec0769eb0f7c5034856bb406a92698dbc02a3d4be0f78a384747106b161d8ea3"
             ],
             "markers": "python_version >= '3.10'",
-            "version": "==1.43.2"
+            "version": "==1.43.3"
         },
         "certifi": {
             "hashes": [
@@ -702,11 +702,11 @@
         },
         "wcwidth": {
             "hashes": [
-                "sha256:1a3a1e510b553315f8e146c54764f4fb6264ffad731b3d78088cdb1478ffbdad",
-                "sha256:cdc4e4262d6ef9a1a57e018384cbeb1208d8abbc64176027e2c2455c81313159"
+                "sha256:5d69154c429a82910e241c738cd0e2976fac8a2dd47a1a805f4afed1c0f136f2",
+                "sha256:90e3a7ea092341c44b99562e75d09e4d5160fe7a3974c6fb842a101a95e7eed0"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==0.6.0"
+            "version": "==0.7.0"
         }
     },
     "develop": {
