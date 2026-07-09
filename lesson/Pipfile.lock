@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "36439860cc0533ee4aa7c9ad7151a3ca9d9670ab027c4291944999ab096e1069"
+            "sha256": "9aa4dea855c4049737a84e67494dd12d682ba101d375e78dad6ee78d6f4c35ce"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -19,20 +19,20 @@
     "default": {
         "boto3": {
             "hashes": [
-                "sha256:7ad1208ead8ac5b07cdef66c0ce1579eda2f550a0ca2f88f6cbd35da44212284",
-                "sha256:ff66a8a6a2728a703f2c63136b8a9b5aeb9c2a902c4e57d79462221b1fd2dd86"
+                "sha256:035d73afe3e29bf271a5b27b30476ff8eefa5ae36f6702eada8e412d5c1420aa",
+                "sha256:621113f7850caec7c8405a07baa26075f700f78844a7f2fdf4d1f879bd3cc3c1"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.10'",
-            "version": "==1.43.43"
+            "version": "==1.43.44"
         },
         "botocore": {
             "hashes": [
-                "sha256:48b3e69404a64f97f16fe72409a0bbb3db5e659403203d26abb447a31e19926b",
-                "sha256:7f6c05ccf4f04543dca40f533af2eeae40306cf4e1e18cd0e7debf548c478c10"
+                "sha256:6afb846fd93815133a53baf1578f1d6016ddbeda247623360379758ca2e3f338",
+                "sha256:cc2a95a53efdcf0ce34a51bca28058e72fcc3b10dd625eb1ad900c5ca3eb8bef"
             ],
             "markers": "python_version >= '3.10'",
-            "version": "==1.43.43"
+            "version": "==1.43.44"
         },
         "certifi": {
             "hashes": [
@@ -486,11 +486,11 @@
         },
         "python-discovery": {
             "hashes": [
-                "sha256:ad57d7045a862460d4a235986c33f13ed707d3aeb9153fa47eb7dfd0d4673289",
-                "sha256:b6e1e4a7d9e3f6948c39746ffe8218225162d738ba39d05ab1d2f6c1cac4878c"
+                "sha256:5cad33982d412c1f3ffb8f9ca4ea292c9680bca3942451d30b69c37fce53a4a3",
+                "sha256:abebe9120b43453b68c908acfb1e72a19d1a959ed2cb620ad38fc57d08056dbe"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==1.4.3"
+            "version": "==1.4.4"
         },
         "pyyaml": {
             "hashes": [
